@@ -1,0 +1,288 @@
+
+\documentclass[11pt,a4paper]{article}
+
+% ===================== Codificación y fuentes =====================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% ===================== Página y utilidades ========================
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\graphicspath{{./}{../results/figures/}}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+% ===================== Etiquetas en español (sin babel) ===========
+\renewcommand{\contentsname}{Índice}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\refname}{Bibliografía}
+
+% ===================== Escala de grises (sin color) ================
+\definecolor{negro}{RGB}{0,0,0}
+\definecolor{gris}{RGB}{90,90,90}
+\definecolor{grisclaro}{RGB}{150,150,150}
+
+% ===================== Hipervínculos (negro) =======================
+\hypersetup{colorlinks=true, linkcolor=negro, urlcolor=negro, citecolor=negro}
+
+% ===================== Estilo de títulos ===========================
+\titleformat{\section}{\large\bfseries\color{negro}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{negro}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{1.4em}{0.4em}
+\titlespacing*{\subsection}{0pt}{1.0em}{0.3em}
+
+% ===================== Pie de página ===============================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[L]{\footnotesize\color{gris}Magíster en Ciencia de Datos e Inteligencia Artificial}
+\fancyfoot[R]{\footnotesize\color{gris}\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===================== Datos del grupo (COMPLETAR) ==================
+\newcommand{\proyTitulo}{Análisis estadístico de condiciones meteorológicas en Australia}
+\newcommand{\proyIntegrantes}{Enzo Pinilla, Claudio Alarcón y Luis Rodrigo Espinoza}
+\newcommand{\proyDataset}{WeatherAUS (Rain in Australia)}
+\newcommand{\proyDocente}{Dr. Jean Paul Maidana González}
+\newcommand{\proyFecha}{28 Junio 2026}
+\newcommand{\proyRepo}{\url{https://github.com/sauriomac/mcdi501-estadistica-computacional-grupo2}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+
+\begin{document}
+\pagenumbering{gobble}
+
+\thispagestyle{empty}
+\begin{center}
+\vspace*{1.0cm}
+\includegraphics[height=4.4cm]{logo_unab.png}\\[1.3cm]
+
+{\footnotesize\color{gris}\MakeUppercase{Magíster en Ciencia de Datos e Inteligencia Artificial}}\\[0.15cm]
+{\footnotesize\color{grisclaro}MCDI501: Estadística Computacional para la Toma de Decisiones}\\[2.0cm]
+
+{\Large\bfseries\color{negro} Evaluación Formativa 1}\\[0.45cm]
+{\large\color{negro} Análisis Exploratorio e Inferencial (práctica)}\\[1.0cm]
+
+\end{center}
+
+\vspace{1.6cm}
+
+\begin{flushleft}
+\setlength{\extrarowheight}{5pt}
+\begin{tabular}{@{}>{\bfseries\color{negro}}l l@{}}
+Título del proyecto: & \proyTitulo \\
+Integrantes:         & \proyIntegrantes \\
+Dataset:             & \proyDataset \\
+Docente:             & \proyDocente \\
+Fecha:               & \proyFecha \\
+Repositorio GitHub:  & \proyRepo \\
+\end{tabular}
+\end{flushleft}
+
+\clearpage
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+
+\section{Introducción}
+
+El presente informe trabaja con el conjunto de datos \textit{WeatherAUS}, también conocido como \textit{Rain in Australia}. El dataset contiene observaciones meteorológicas diarias registradas en distintas estaciones de Australia y reúne 145.460 registros con 23 variables. Entre ellas se incluyen mediciones de temperatura, precipitación, humedad, presión atmosférica, dirección y velocidad del viento, nubosidad y dos variables binarias asociadas a lluvia: \textit{RainToday} y \textit{RainTomorrow}.
+
+El problema de análisis se centra en caracterizar el comportamiento meteorológico observado y, especialmente, en estudiar variables relacionadas con la ocurrencia de lluvia al día siguiente. La variable objetivo principal es \textit{RainTomorrow}, que indica si al día siguiente se registró lluvia. En este contexto, el análisis permite apoyar decisiones bajo incertidumbre, por ejemplo, estimar la probabilidad de lluvia, comparar condiciones atmosféricas entre días con y sin lluvia, y detectar variables relevantes para futuras fases de modelamiento predictivo.
+
+Desde el punto de vista estadístico, el conjunto incluye variables cuantitativas continuas, como \textit{MinTemp}, \textit{MaxTemp}, \textit{Rainfall}, \textit{Humidity3pm}, \textit{Pressure9am} y \textit{WindGustSpeed}; variables categóricas nominales, como \textit{Location}, \textit{WindGustDir}, \textit{WindDir9am} y \textit{WindDir3pm}; y variables binarias, como \textit{RainToday} y \textit{RainTomorrow}. De forma preliminar, se espera que la humedad, la precipitación, la presión y la temperatura presenten relaciones relevantes con la ocurrencia de lluvia al día siguiente.
+
+\section{Aplicación de estadística descriptiva}
+
+La exploración inicial confirma que el dataset posee 145.460 observaciones y 23 columnas. Para el análisis descriptivo se seleccionaron variables meteorológicas cuantitativas relevantes, priorizando aquellas con interpretación directa y disponibilidad suficiente de datos. La Tabla \ref{tab:descriptivos} resume medidas de tendencia central, dispersión y posición.
+
+\begin{table}[htbp]
+\centering
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Variable & n & Media & Desv. est. & Mín. & Q1 & Mediana & Q3 & Máx. \\
+\midrule
+MinTemp & 143.975 & 12,19 & 6,40 & -8,50 & 7,60 & 12,00 & 16,90 & 33,90 \\
+MaxTemp & 144.199 & 23,22 & 7,12 & -4,80 & 17,90 & 22,60 & 28,20 & 48,10 \\
+Rainfall & 142.199 & 2,36 & 8,48 & 0,00 & 0,00 & 0,00 & 0,80 & 371,00 \\
+Humidity9am & 142.806 & 68,88 & 19,03 & 0,00 & 57,00 & 70,00 & 83,00 & 100,00 \\
+Humidity3pm & 140.953 & 51,54 & 20,80 & 0,00 & 37,00 & 52,00 & 66,00 & 100,00 \\
+Pressure9am & 130.395 & 1.017,65 & 7,11 & 980,50 & 1.012,90 & 1.017,60 & 1.022,40 & 1.041,00 \\
+Temp9am & 143.693 & 16,99 & 6,49 & -7,20 & 12,30 & 16,70 & 21,60 & 40,20 \\
+Temp3pm & 141.851 & 21,68 & 6,94 & -5,40 & 16,60 & 21,10 & 26,40 & 46,70 \\
+WindGustSpeed & 135.197 & 40,04 & 13,61 & 6,00 & 31,00 & 39,00 & 48,00 & 135,00 \\
+\bottomrule
+\end{tabular}}
+\caption{Estadísticos descriptivos de variables meteorológicas seleccionadas.}
+\label{tab:descriptivos}
+\end{table}
+
+Los resultados muestran que la temperatura máxima media es de 23,22 °C, con mediana de 22,60 °C, lo que sugiere una distribución aproximadamente centrada. En cambio, \textit{Rainfall} presenta una media de 2,36 mm y mediana de 0 mm, señal clara de asimetría positiva: la mayoría de los días no registra lluvia o registra lluvia baja, mientras que pocos eventos concentran valores altos de precipitación.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{distribucion_temperatura_maxima.png}
+\end{minipage}\hfill
+\begin{minipage}{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{distribucion_precipitaciones.png}
+\end{minipage}
+\caption{Histogramas de temperatura máxima y precipitación diaria.}
+\label{fig:histogramas}
+\end{figure}
+
+La Figura \ref{fig:histogramas} refuerza esta lectura. La temperatura máxima se distribuye de manera relativamente regular alrededor de su media, mientras que la precipitación se concentra fuertemente en valores cercanos a cero. Esta diferencia justifica tratar con cautela las variables de lluvia en análisis posteriores, ya que su distribución no es simétrica.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{humedad_segun_lluvia.png}
+\caption{Boxplot de humedad a las 15:00, segmentado por \textit{RainTomorrow}.}
+\label{fig:boxplots}
+\end{figure}
+
+La Figura \ref{fig:boxplots} compara la humedad a las 15:00 según si llueve o no al día siguiente. En los días previos a lluvia, la humedad tiende a ser mayor, lo que sugiere una relación preliminar entre esta variable y la lluvia futura.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{matriz_correlacion.png}
+\caption{Matriz de correlación entre variables meteorológicas seleccionadas.}
+\label{fig:correlacion}
+\end{figure}
+
+La matriz de correlaciones de la Figura \ref{fig:correlacion} evidencia relaciones esperables: \textit{MaxTemp} y \textit{Temp3pm} presentan una correlación muy alta, mientras que la humedad a las 15:00 se relaciona negativamente con la temperatura a esa misma hora. Estas asociaciones son coherentes con el comportamiento físico de las variables atmosféricas.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.62\textwidth]{distribucion_rain_tomorrow.png}
+\caption{Distribución de la variable objetivo \textit{RainTomorrow}.}
+\label{fig:raintomorrow}
+\end{figure}
+
+La variable objetivo se encuentra desbalanceada: 77,6\% de los registros válidos corresponden a días sin lluvia al día siguiente y 22,4\% a días con lluvia. Este punto es relevante para fases posteriores, porque un modelo predictivo deberá considerar que la clase ``Yes'' es minoritaria.
+
+\section{Estimación puntual e intervalos de confianza}
+
+Se estimaron dos parámetros poblacionales relevantes para el problema: la media de la temperatura máxima diaria y la proporción de días con lluvia al día siguiente. Para la media se utilizó un intervalo de confianza basado en la distribución t de Student, debido a que la desviación estándar poblacional es desconocida. Para la proporción se utilizó la aproximación normal, válida por el gran tamaño muestral.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Parámetro & Estimación puntual & IC 95\% inferior & IC 95\% superior \\
+\midrule
+Media de MaxTemp (°C) & 23,22 & 23,18 & 23,26 \\
+Proporción RainTomorrow = Yes & 22,42\% & 22,20\% & 22,63\% \\
+\bottomrule
+\end{tabular}
+\caption{Estimaciones puntuales e intervalos de confianza al 95\%.}
+\label{tab:ic}
+\end{table}
+
+Con un 95\% de confianza, la temperatura máxima promedio poblacional se ubica entre 23,18 °C y 23,26 °C. El intervalo es estrecho debido al gran tamaño muestral disponible. Asimismo, la proporción poblacional de días con lluvia al día siguiente se estima entre 22,20\% y 22,63\%. En términos prácticos, esto equivale aproximadamente a un día con lluvia futura por cada 4,4 días observados.
+
+\section{Aplicación de una prueba de hipótesis}
+
+Se aplicaron dos pruebas de hipótesis con nivel de significancia \(\alpha = 0{,}05\). La primera evalúa si la temperatura máxima media difiere de un valor de referencia de 22 °C. La segunda compara la humedad relativa a las 15:00 entre los días con y sin lluvia al día siguiente.
+
+\subsection{Prueba t de una muestra para MaxTemp}
+
+Se plantean las siguientes hipótesis:
+
+\[
+H_0: \mu_{MaxTemp} = 22 \quad \text{vs.} \quad H_1: \mu_{MaxTemp} \neq 22
+\]
+
+El resultado fue \(t = 65{,}15\), con \(p < 0{,}001\). Como el valor p es menor que 0,05, se rechaza la hipótesis nula. Por lo tanto, existe evidencia estadística suficiente para concluir que la temperatura máxima promedio difiere significativamente de 22 °C. La media observada fue 23,22 °C, por lo que la diferencia estimada es de 1,22 °C.
+
+\subsection{Prueba t de Welch para Humidity3pm según RainTomorrow}
+
+Se comparó la humedad a las 15:00 entre los días en que al día siguiente llovió y aquellos en que no llovió. Se utilizó la prueba t de Welch, ya que permite comparar dos grupos independientes sin asumir igualdad de varianzas.
+
+\[
+H_0: \mu_{Yes} = \mu_{No} \quad \text{vs.} \quad H_1: \mu_{Yes} \neq \mu_{No}
+\]
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Grupo RainTomorrow & n & Media Humidity3pm & Desv. est. \\
+\midrule
+No & 107.670 & 46,51\% & 18,49 \\
+Yes & 30.913 & 68,80\% & 19,04 \\
+\bottomrule
+\end{tabular}
+\caption{Comparación de humedad a las 15:00 según ocurrencia de lluvia al día siguiente.}
+\label{tab:welch}
+\end{table}
+
+El resultado de la prueba fue \(t = 182{,}61\), con \(p < 0{,}001\). Se rechaza \(H_0\), por lo que existe evidencia estadística de que la humedad a las 15:00 difiere entre ambos grupos. La media de humedad es considerablemente mayor en los días previos a lluvia futura (68,80\%) que en los días sin lluvia futura (46,51\%).
+
+\section{Documentación de procedimientos y resultados}
+
+El análisis fue desarrollado en Python mediante un cuaderno Jupyter denominado \texttt{F1\_Definicion.ipynb}. El procedimiento seguido fue el siguiente:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item Carga del dataset \texttt{weatherAUS.csv} desde la carpeta \texttt{data/raw} del repositorio.
+    \item Revisión inicial mediante dimensiones, tipos de datos, primeras observaciones y valores faltantes.
+    \item Clasificación de variables según tipo: cuantitativas continuas, categóricas nominales y binarias.
+    \item Cálculo de medidas descriptivas: media, desviación estándar, mínimo, cuartiles, mediana y máximo.
+    \item Construcción de gráficos adecuados al tipo de variable: histogramas, boxplots, matriz de correlación y gráfico de barras.
+    \item Estimación de intervalos de confianza para una media y una proporción.
+    \item Aplicación de pruebas de hipótesis: prueba t de una muestra y prueba t de Welch para muestras independientes.
+\end{itemize}
+
+Para asegurar reproducibilidad, el notebook mantiene el orden del informe y documenta cada bloque de código con celdas explicativas. Las salidas usadas en este informe provienen del mismo flujo de trabajo computacional, evitando discrepancias entre análisis, tablas y figuras.
+
+\section{Interpretación preliminar de resultados}
+
+Los resultados permiten establecer una primera caracterización del comportamiento meteorológico del dataset. La temperatura máxima promedio se estima con alta precisión alrededor de 23,22 °C, y la prueba de hipótesis indica que esta media difiere significativamente del valor de referencia de 22 °C. Aunque la diferencia es estadísticamente clara, su magnitud práctica debe interpretarse con cautela, ya que el gran tamaño muestral aumenta la sensibilidad de la prueba.
+
+Respecto de la lluvia al día siguiente, la proporción estimada de eventos positivos es 22,42\%. Esto significa que la lluvia futura no es el caso más frecuente, pero tampoco es un evento raro. El desbalance de la variable \textit{RainTomorrow} deberá considerarse en etapas posteriores si se construyen modelos predictivos, porque una evaluación basada solo en exactitud podría favorecer excesivamente la clase mayoritaria.
+
+El hallazgo más relevante para la toma de decisiones es la diferencia de humedad a las 15:00 entre días con y sin lluvia al día siguiente. Los días previos a lluvia presentan una humedad media mucho más alta, lo que sugiere que \textit{Humidity3pm} es una variable prioritaria para explicar o anticipar la ocurrencia de lluvia. Además, la relación negativa entre temperatura y humedad observada en la matriz de correlación respalda la coherencia interna del conjunto de datos.
+
+\section{Presentación formal del informe}
+
+El informe fue redactado siguiendo la estructura de la plantilla entregada para la Evaluación Formativa 1. Se utilizaron conceptos estadísticos adecuados, tales como estimación puntual, intervalo de confianza, hipótesis nula, hipótesis alternativa, valor p y nivel de significancia. Las tablas y figuras se numeraron y se referenciaron dentro del texto para mantener trazabilidad entre los resultados computacionales y la interpretación escrita.
+
+Antes de la entrega final, se recomienda verificar que el archivo PDF compile correctamente, que el notebook se ejecute sin errores mediante \textit{Restart \& Run All}, y que el repositorio incluya el dataset, el notebook, el archivo LaTeX, el logo institucional y el PDF final dentro de la carpeta correspondiente a la evaluación.
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Bibliografía}
+\begin{thebibliography}{9}
+\bibitem{kaggle2017}
+Kaggle. (2017). \textit{Rain in Australia Dataset}. Recuperado de \url{https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package}
+
+\bibitem{maidana2026dispersion}
+Maidana, J. P. (2026). \textit{Medidas de dispersión y forma: variabilidad, asimetría y curtosis} [Apunte]. Universidad Andrés Bello, Santiago, Chile.
+
+\bibitem{maidana2026intervalos}
+Maidana, J. P. (2026). \textit{Intervalos de confianza: cuantificando la incertidumbre estadística} [Apunte]. Universidad Andrés Bello, Santiago, Chile.
+
+\bibitem{maidana2026pruebas}
+Maidana, J. P. (2026). \textit{Pruebas de hipótesis: pruebas t y Z para una muestra} [Apunte]. Universidad Andrés Bello, Santiago, Chile.
+
+\bibitem{mckinney2010}
+McKinney, W. (2010). Data structures for statistical computing in Python. \textit{Proceedings of the 9th Python in Science Conference}, 56--61.
+
+\bibitem{virtanen2020}
+Virtanen, P. et al. (2020). SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python. \textit{Nature Methods}, 17, 261--272.
+\end{thebibliography}
+
+\end{document}
