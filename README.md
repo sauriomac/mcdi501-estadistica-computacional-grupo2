@@ -23,6 +23,13 @@ Dr. Jean Paul Maidana González
 - Datos procesados: `data/processed/weatherAUS.csv`.
 - Figuras generadas localmente: `results/figures/`.
 
+### Evaluación Sumativa 1: análisis exploratorio e inferencial
+
+- Análisis reproducible: [`notebooks/S1_Definicion.ipynb`](notebooks/S1_Definicion.ipynb).
+- Informe fuente: [`sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.tex`](sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.tex).
+- Informe compilado: [`sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.pdf`](sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.pdf).
+- Figuras del análisis: `results/figures/fig01_*.png` a `results/figures/fig05_*.png`.
+
 ## Estructura
 
 - `data/raw/`: datasets originales.
@@ -71,7 +78,12 @@ Iniciar JupyterLab desde la raíz del repositorio:
 python -m jupyter lab
 ```
 
-Abrir `notebooks/F1_Definicion.ipynb` y seleccionar **Kernel → Restart Kernel and Run All Cells**. Al finalizar se generan:
+Abrir el notebook correspondiente y seleccionar **Kernel → Restart Kernel and Run All Cells**:
+
+- Formativa 1: `notebooks/F1_Definicion.ipynb`.
+- Sumativa 1: `notebooks/S1_Definicion.ipynb`.
+
+Al finalizar se generan:
 
 - Los datos procesados en `data/processed/weatherAUS.csv`.
 - Las figuras utilizadas por LaTeX en `results/figures/`.
@@ -84,7 +96,9 @@ Se requiere una distribución LaTeX:
 - **Windows:** [MiKTeX](https://miktex.org/download) o [TeX Live](https://www.tug.org/texlive/).
 - **Linux (Ubuntu/Debian):** `sudo apt install texlive-latex-extra latexmk`.
 
-Una vez instalada y después de ejecutar el notebook, compilar desde la raíz del repositorio:
+Una vez instalada y después de ejecutar el notebook correspondiente, compilar desde la raíz del repositorio.
+
+Formativa 1:
 
 ```bash
 cd formativa-1-eda-inferencia
@@ -92,17 +106,27 @@ pdflatex formativa-1-eda-inferencia.tex
 pdflatex formativa-1-eda-inferencia.tex
 ```
 
+Sumativa 1:
+
+```bash
+cd sumativa-1-analisis-exploratorio-inferencial
+pdflatex sumativa-1-analisis-exploratorio-inferencial.tex
+pdflatex sumativa-1-analisis-exploratorio-inferencial.tex
+```
+
 La primera compilación genera los archivos auxiliares; la segunda actualiza el índice y las referencias internas. LaTeX incorpora las figuras existentes en `results/figures/`, pero no las genera.
 
 ### 4. Abrir el PDF generado
 
+Usar el nombre del PDF correspondiente. Por ejemplo, para la Sumativa 1:
+
 ```bash
 # macOS
-open formativa-1-eda-inferencia.pdf
+open sumativa-1-analisis-exploratorio-inferencial.pdf
 
 # Linux
-xdg-open formativa-1-eda-inferencia.pdf
+xdg-open sumativa-1-analisis-exploratorio-inferencial.pdf
 
 # Windows (PowerShell)
-Start-Process formativa-1-eda-inferencia.pdf
+Start-Process sumativa-1-analisis-exploratorio-inferencial.pdf
 ```
