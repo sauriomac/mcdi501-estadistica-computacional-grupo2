@@ -1,0 +1,209 @@
+{
+  "metadata": {
+    "fuente": "S2_Validacion_feedback_S1.ipynb",
+    "seed": 42,
+    "n_bootstrap": 10000,
+    "n_permutaciones": 10000,
+    "n_simulaciones_montecarlo": 12000,
+    "generado_utc": "2026-07-06T22:52:11+00:00"
+  },
+  "feedback_s1_incorporado": {
+    "colinealidad_MaxTemp_Temp3pm": 0.9845028310904408,
+    "faltantes_clave_porcentaje": {
+      "Sunshine": 48.01,
+      "Evaporation": 43.17
+    },
+    "balance_RainTomorrow_porcentaje": {
+      "No": 77.58,
+      "Yes": 22.42
+    },
+    "n_locations": 49
+  },
+  "parametros_validados": [
+    {
+      "parámetro": "Media de MaxTemp",
+      "estimación": 23.22134827564685,
+      "robusto": true,
+      "evidencia": "IC clásico ≈ IC bootstrap; no usar junto con Temp3pm sin control por colinealidad."
+    },
+    {
+      "parámetro": "Media de Humidity3pm",
+      "estimación": 51.5391158755046,
+      "robusto": true,
+      "evidencia": "IC clásico ≈ IC bootstrap; diferencia por RainTomorrow validada por Welch y permutación."
+    },
+    {
+      "parámetro": "Media de WindGustSpeed",
+      "estimación": 40.03523007167319,
+      "robusto": "Moderado",
+      "evidencia": "IC bootstrap validado; variable con cola pesada y sensibilidad moderada a extremos."
+    },
+    {
+      "parámetro": "Media de Rainfall",
+      "estimación": 2.360918149916666,
+      "robusto": "Requiere cautela",
+      "evidencia": "Variable cero-inflada y de cola pesada; usar log1p, winsorización o percentiles en S3."
+    },
+    {
+      "parámetro": "Proporción RainTomorrow=Yes",
+      "estimación": 0.22418121848473554,
+      "robusto": true,
+      "evidencia": "Wilson ≈ bootstrap; confirma desbalance de clase minoritaria cercano a 22,4%."
+    },
+    {
+      "parámetro": "Diferencia MaxTemp (Yes-No)",
+      "estimación": -2.7171465873533904,
+      "robusto": true,
+      "evidencia": "Welch y permutación studentizada coinciden; considerar colinealidad con Temp3pm."
+    },
+    {
+      "parámetro": "Diferencia Humidity3pm (Yes-No)",
+      "estimación": 22.28939435126226,
+      "robusto": true,
+      "evidencia": "Welch y permutación studentizada coinciden; predictor meteorológicamente relevante."
+    }
+  ],
+  "correlaciones_validadas": [
+    {
+      "variable": "Humidity3pm",
+      "r_observado": 0.4461603787913097,
+      "IC95_inf": 0.4417854576190842,
+      "IC95_sup": 0.4504705963293747,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "RainToday_bin",
+      "r_observado": 0.31309674550896754,
+      "IC95_inf": 0.30740464410331736,
+      "IC95_sup": 0.3188885072076607,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "Humidity9am",
+      "r_observado": 0.2571611603438046,
+      "IC95_inf": 0.2525651453797194,
+      "IC95_sup": 0.2615941692355465,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "Pressure9am",
+      "r_observado": -0.24637114625947942,
+      "IC95_inf": -0.2516267348917404,
+      "IC95_sup": -0.24114765697820767,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "Rainfall",
+      "r_observado": 0.23903180145061156,
+      "IC95_inf": 0.23194563924103306,
+      "IC95_sup": 0.24619630946123902,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    }
+  ],
+  "pruebas_permutacion": [
+    {
+      "variable": "Humidity3pm",
+      "diferencia_observada": 22.28939435126226,
+      "t_welch_observado": 182.6076932982492,
+      "p_valor_parametrico_S1": 0.0,
+      "p_valor_permutacion": 9.999000099990002e-05
+    },
+    {
+      "variable": "MaxTemp",
+      "diferencia_observada": -2.7171465873533904,
+      "t_welch_observado": -61.467943471222014,
+      "p_valor_parametrico_S1": 0.0,
+      "p_valor_permutacion": 9.999000099990002e-05
+    }
+  ],
+  "robustez_outliers": [
+    {
+      "variable": "WindGustSpeed",
+      "n": 135197,
+      "Q1": 31.0,
+      "Q3": 48.0,
+      "IQR": 17.0,
+      "limite_inf_IQR": 5.5,
+      "limite_sup_IQR": 73.5,
+      "%_marcados_IQR": 2.2870329962942963,
+      "media_original": 40.03523007167319,
+      "media_sin_marcados_IQR": 39.049907270731616,
+      "media_winsorizada_1_99": 39.97175233178251,
+      "trimmed_mean_10pct": 39.03838792888248,
+      "mediana": 39.0,
+      "p99": 81.0,
+      "asimetría": 0.8748691712886105,
+      "curtosis": 1.4185454754017703,
+      "media_log1p": NaN,
+      "nota_IQR": "IQR interpretable como señal razonable de ráfagas altas"
+    },
+    {
+      "variable": "Rainfall",
+      "n": 142199,
+      "Q1": 0.0,
+      "Q3": 0.8,
+      "IQR": 0.8,
+      "limite_inf_IQR": -1.2000000000000002,
+      "limite_sup_IQR": 2.0,
+      "%_marcados_IQR": 17.98746826630286,
+      "media_original": 2.360918149916666,
+      "media_sin_marcados_IQR": 0.15543341250718135,
+      "media_winsorizada_1_99": 2.092675053973656,
+      "trimmed_mean_10pct": 0.5339422121816791,
+      "mediana": 0.0,
+      "p99": 37.4,
+      "asimetría": 9.836121491711312,
+      "curtosis": 178.14577245733804,
+      "media_log1p": 0.4870804720391045,
+      "nota_IQR": "IQR puede degenerar por ceros; no interpretar todo valor positivo como outlier real"
+    }
+  ],
+  "diagnostico_colas_pesadas": [
+    {
+      "variable": "Rainfall",
+      "n": 142199,
+      "media": 2.360918149916666,
+      "mediana": 0.0,
+      "p95": 13.0,
+      "p99": 37.4,
+      "asimetría": 9.83622525039533,
+      "curtosis": 178.1520787716008
+    },
+    {
+      "variable": "WindGustSpeed",
+      "n": 135197,
+      "media": 40.03523007167319,
+      "mediana": 39.0,
+      "p95": 65.0,
+      "p99": 81.0,
+      "asimetría": 0.8748788780303395,
+      "curtosis": 1.4186423199602203
+    }
+  ],
+  "simulacion_montecarlo": {
+    "n_simulaciones": 12000.0,
+    "ventana_observaciones": 30.0,
+    "proporcion_base_S1": 0.22418121848473554,
+    "media_días_lluvia": 6.743333333333333,
+    "sd_días_lluvia": 2.299325146696977,
+    "MCSE_media": 0.02098987083141349,
+    "IC95_MC_media_inf": 6.702193186503763,
+    "IC95_MC_media_sup": 6.784473480162903,
+    "IC95_predictivo_inf": 3.0,
+    "IC95_predictivo_sup": 11.0,
+    "P(>=10 días de lluvia en 30 observaciones)": 0.1195,
+    "P(>=15 días de lluvia en 30 observaciones)": 0.001
+  },
+  "recomendaciones_s3": [
+    "No usar MaxTemp y Temp3pm simultáneamente sin control de colinealidad.",
+    "Definir imputación explícita para Sunshine y Evaporation si se usan.",
+    "Evaluar modelos con métricas sensibles a RainTomorrow=Yes: recall, precision, F1, ROC-AUC y PR-AUC.",
+    "Tratar Rainfall y WindGustSpeed con métodos robustos por colas pesadas.",
+    "Preferir partición temporal o agrupada por Location frente a división aleatoria simple."
+  ]
+}

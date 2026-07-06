@@ -1,0 +1,3 @@
+variable,diferencia_observada,t_welch_observado,p_valor_parametrico_S1,p_valor_permutacion
+Humidity3pm,22.28939435126226,182.6076932982492,0.0,9.999000099990002e-05
+MaxTemp,-2.7171465873533904,-61.467943471222014,0.0,9.999000099990002e-05
