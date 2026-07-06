@@ -4,9 +4,9 @@ Repositorio del Grupo 2 para las actividades formativas y sumativas del curso MC
 
 ## Integrantes
 
-- Enzo Pinilla
-- Claudio Alarcón
-- Luis Rodrigo Espinoza
+* Enzo Pinilla
+* Claudio Alarcón
+* Luis Rodrigo Espinoza
 
 ## Docente
 
@@ -16,30 +16,58 @@ Dr. Jean Paul Maidana González
 
 ### Evaluación Formativa 1: EDA e inferencia
 
-- Análisis exploratorio e inferencial: [`notebooks/F1_Definicion.ipynb`](notebooks/F1_Definicion.ipynb).
-- Informe fuente: [`formativa-1-eda-inferencia/formativa-1-eda-inferencia.tex`](formativa-1-eda-inferencia/formativa-1-eda-inferencia.tex).
-- Informe compilado: [`formativa-1-eda-inferencia/formativa-1-eda-inferencia.pdf`](formativa-1-eda-inferencia/formativa-1-eda-inferencia.pdf).
-- Datos originales: `data/raw/weatherAUS.csv`.
-- Datos procesados: `data/processed/weatherAUS.csv`.
-- Figuras generadas localmente: `results/figures/`.
+* Análisis exploratorio e inferencial: [`notebooks/F1_Definicion.ipynb`](notebooks/F1_Definicion.ipynb).
+* Informe fuente: [`formativa-1-eda-inferencia/formativa-1-eda-inferencia.tex`](formativa-1-eda-inferencia/formativa-1-eda-inferencia.tex).
+* Informe compilado: [`formativa-1-eda-inferencia/formativa-1-eda-inferencia.pdf`](formativa-1-eda-inferencia/formativa-1-eda-inferencia.pdf).
+* Datos originales: `data/raw/weatherAUS.csv`.
+* Datos procesados: `data/processed/weatherAUS.csv`.
+* Figuras generadas localmente: `results/figures/`.
 
 ### Evaluación Sumativa 1: análisis exploratorio e inferencial
 
-- Análisis reproducible: [`notebooks/S1_Definicion.ipynb`](notebooks/S1_Definicion.ipynb).
-- Informe fuente: [`sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.tex`](sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.tex).
-- Informe compilado: [`sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.pdf`](sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.pdf).
-- Figuras del análisis: `results/figures/fig01_*.png` a `results/figures/fig05_*.png`.
+* Análisis reproducible: [`notebooks/S1_Definicion.ipynb`](notebooks/S1_Definicion.ipynb).
+* Informe fuente: [`sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.tex`](sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.tex).
+* Informe compilado: [`sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.pdf`](sumativa-1-analisis-exploratorio-inferencial/sumativa-1-analisis-exploratorio-inferencial.pdf).
+* Figuras del análisis: `results/figures/fig01_*.png` a `results/figures/fig05_*.png`.
+
+### Evaluación Sumativa 2: validación, simulación y remuestreo
+
+* Validación reproducible: [`notebooks/S2_Validacion.ipynb`](notebooks/S2_Validacion.ipynb).
+* Informe fuente: [`sumativa-2-validacion-simulacion-remuestreo/sumativa-2-validacion-simulacion-remuestreo.tex`](sumativa-2-validacion-simulacion-remuestreo/sumativa-2-validacion-simulacion-remuestreo.tex).
+* Informe compilado: [`sumativa-2-validacion-simulacion-remuestreo/sumativa-2-validacion-simulacion-remuestreo.pdf`](sumativa-2-validacion-simulacion-remuestreo/sumativa-2-validacion-simulacion-remuestreo.pdf).
+* Figuras del análisis: `results/figures/fig_s2_*.png`.
+* Reportes generados: `results/reports/`.
+
+La Sumativa 2 valida y profundiza los resultados obtenidos en la Sumativa 1 mediante técnicas de simulación y remuestreo. En particular, incorpora:
+
+* Bootstrap no paramétrico con 10.000 remuestras.
+* Intervalos de confianza por método percentil y BCa.
+* Comparación con intervalos clásicos obtenidos en S1.
+* Test de permutación con 10.000 permutaciones.
+* Evaluación de estabilidad de correlaciones mediante bootstrap.
+* Simulación Monte Carlo basada en parámetros estimados en S1.
+* Análisis de robustez frente a outliers y supuestos estadísticos.
+* Síntesis de resultados validados para la preparación de S3.
+
+Además, esta evaluación incorpora explícitamente el feedback recibido en S1:
+
+* Revisión de la colinealidad entre `MaxTemp` y `Temp3pm`.
+* Consideración de faltantes relevantes en `Sunshine` y `Evaporation`.
+* Análisis del desbalance de la variable objetivo `RainTomorrow`.
+* Validación bootstrap de variables con colas pesadas como `Rainfall` y `WindGustSpeed`.
+* Tratamiento cuidadoso de `Rainfall` mediante `log1p`, winsorización y análisis de robustez.
+* Recomendaciones para S3 sobre imputación, métricas sensibles a clase minoritaria y partición temporal o por `Location`.
 
 ## Estructura
 
-- `data/raw/`: datasets originales.
-- `data/processed/`: datasets procesados.
-- `notebooks/`: análisis exploratorio, inferencial y modelamiento.
-- `src/`: funciones reutilizables.
-- `results/figures/`: figuras generadas por los notebooks.
-- `results/reports/`: reportes generados.
-- `docs/`: documentación adicional.
-- `formativa-*` y `sumativa-*`: fuentes y entregables de cada evaluación.
+* `data/raw/`: datasets originales.
+* `data/processed/`: datasets procesados.
+* `notebooks/`: análisis exploratorio, inferencial, validación, simulación y modelamiento.
+* `src/`: funciones reutilizables.
+* `results/figures/`: figuras generadas por los notebooks.
+* `results/reports/`: reportes generados.
+* `docs/`: documentación adicional.
+* `formativa-*` y `sumativa-*`: fuentes y entregables de cada evaluación.
 
 ## Orden de ejecución
 
@@ -70,7 +98,7 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 2. Ejecutar el notebook
+### 2. Ejecutar los notebooks
 
 Iniciar JupyterLab desde la raíz del repositorio:
 
@@ -80,21 +108,23 @@ python -m jupyter lab
 
 Abrir el notebook correspondiente y seleccionar **Kernel → Restart Kernel and Run All Cells**:
 
-- Formativa 1: `notebooks/F1_Definicion.ipynb`.
-- Sumativa 1: `notebooks/S1_Definicion.ipynb`.
+* Formativa 1: `notebooks/F1_Definicion.ipynb`.
+* Sumativa 1: `notebooks/S1_Definicion.ipynb`.
+* Sumativa 2: `notebooks/S2_Validacion.ipynb`.
 
 Al finalizar se generan:
 
-- Los datos procesados en `data/processed/weatherAUS.csv`.
-- Las figuras utilizadas por LaTeX en `results/figures/`.
+* Los datos procesados en `data/processed/weatherAUS.csv`.
+* Las figuras utilizadas por LaTeX en `results/figures/`.
+* Los reportes y tablas auxiliares en `results/reports/`.
 
-### 3. Compilar el informe LaTeX
+### 3. Compilar los informes LaTeX
 
 Se requiere una distribución LaTeX:
 
-- **macOS:** [MacTeX](https://www.tug.org/mactex/).
-- **Windows:** [MiKTeX](https://miktex.org/download) o [TeX Live](https://www.tug.org/texlive/).
-- **Linux (Ubuntu/Debian):** `sudo apt install texlive-latex-extra latexmk`.
+* **macOS:** [MacTeX](https://www.tug.org/mactex/).
+* **Windows:** [MiKTeX](https://miktex.org/download) o [TeX Live](https://www.tug.org/texlive/).
+* **Linux (Ubuntu/Debian):** `sudo apt install texlive-latex-extra latexmk`.
 
 Una vez instalada y después de ejecutar el notebook correspondiente, compilar desde la raíz del repositorio.
 
@@ -114,11 +144,34 @@ pdflatex sumativa-1-analisis-exploratorio-inferencial.tex
 pdflatex sumativa-1-analisis-exploratorio-inferencial.tex
 ```
 
+Sumativa 2:
+
+```bash
+cd sumativa-2-validacion-simulacion-remuestreo
+pdflatex sumativa-2-validacion-simulacion-remuestreo.tex
+pdflatex sumativa-2-validacion-simulacion-remuestreo.tex
+```
+
 La primera compilación genera los archivos auxiliares; la segunda actualiza el índice y las referencias internas. LaTeX incorpora las figuras existentes en `results/figures/`, pero no las genera.
 
 ### 4. Abrir el PDF generado
 
-Usar el nombre del PDF correspondiente. Por ejemplo, para la Sumativa 1:
+Usar el nombre del PDF correspondiente.
+
+Formativa 1:
+
+```bash
+# macOS
+open formativa-1-eda-inferencia.pdf
+
+# Linux
+xdg-open formativa-1-eda-inferencia.pdf
+
+# Windows (PowerShell)
+Start-Process formativa-1-eda-inferencia.pdf
+```
+
+Sumativa 1:
 
 ```bash
 # macOS
@@ -130,3 +183,25 @@ xdg-open sumativa-1-analisis-exploratorio-inferencial.pdf
 # Windows (PowerShell)
 Start-Process sumativa-1-analisis-exploratorio-inferencial.pdf
 ```
+
+Sumativa 2:
+
+```bash
+# macOS
+open sumativa-2-validacion-simulacion-remuestreo.pdf
+
+# Linux
+xdg-open sumativa-2-validacion-simulacion-remuestreo.pdf
+
+# Windows (PowerShell)
+Start-Process sumativa-2-validacion-simulacion-remuestreo.pdf
+```
+
+## Notas de reproducibilidad
+
+* Ejecutar siempre los notebooks desde la raíz del repositorio.
+* Verificar que exista el archivo `data/raw/weatherAUS.csv`.
+* Ejecutar `Kernel → Restart Kernel and Run All Cells` antes de compilar los informes.
+* No editar manualmente las figuras generadas por los notebooks.
+* Mantener las salidas de `results/figures/` y `results/reports/` sincronizadas con la versión final del notebook.
+* La Sumativa 2 depende explícitamente de los resultados de la Sumativa 1, por lo que debe ejecutarse después de S1.
