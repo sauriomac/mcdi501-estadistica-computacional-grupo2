@@ -1,0 +1,8 @@
+parámetro,estimación,robusto,evidencia
+Media de MaxTemp,23.22134827564685,True,IC clásico ≈ IC bootstrap; no usar junto con Temp3pm sin control por colinealidad.
+Media de Humidity3pm,51.5391158755046,True,IC clásico ≈ IC bootstrap; diferencia por RainTomorrow validada por Welch y permutación.
+Media de WindGustSpeed,40.03523007167319,Moderado,IC bootstrap validado; variable con cola pesada y sensibilidad moderada a extremos.
+Media de Rainfall,2.360918149916666,Requiere cautela,"Variable cero-inflada y de cola pesada; usar log1p, winsorización o percentiles en S3."
+Proporción RainTomorrow=Yes,0.22418121848473554,True,"Wilson ≈ bootstrap; confirma desbalance de clase minoritaria cercano a 22,4%."
+Diferencia MaxTemp (Yes-No),-2.7171465873533904,True,Welch y permutación studentizada coinciden; considerar colinealidad con Temp3pm.
+Diferencia Humidity3pm (Yes-No),22.28939435126226,True,Welch y permutación studentizada coinciden; predictor meteorológicamente relevante.
