@@ -1,0 +1,7 @@
+parámetro,estimación,robusto,evidencia
+Media de MaxTemp,23.2213,True,IC clásico ≈ IC bootstrap (percentil y BCa); baja asimetría.
+Media de Humidity3pm,51.5391,True,IC clásico ≈ IC bootstrap; variable aprox. simétrica.
+Media de WindGustSpeed,40.0352,Moderado,"IC validado, pero sensible a outliers (~2.3%); usar también mediana/trimmed mean."
+Proporción RainTomorrow=Yes,0.2242,True,Wilson ≈ bootstrap; usado exitosamente en simulación Monte Carlo.
+Diferencia MaxTemp (Yes-No),-2.7171,True,Welch y permutación coinciden (p<0.001); efecto pequeño (d=-0.39).
+Diferencia Humidity3pm (Yes-No),22.2894,True,Welch y permutación coinciden (p<0.001); efecto grande (d=1.20).

@@ -1,0 +1,164 @@
+{
+  "metadata": {
+    "fuente": "S2_Validacion.ipynb",
+    "seed": 42,
+    "n_bootstrap": 10000,
+    "n_permutaciones": 10000,
+    "n_simulaciones_montecarlo": 12000,
+    "generado_utc": "2026-07-11T00:40:35+00:00"
+  },
+  "parametros_validados": [
+    {
+      "parámetro": "Media de MaxTemp",
+      "estimación": 23.2213,
+      "robusto": true,
+      "evidencia": "IC clásico ≈ IC bootstrap (percentil y BCa); baja asimetría."
+    },
+    {
+      "parámetro": "Media de Humidity3pm",
+      "estimación": 51.5391,
+      "robusto": true,
+      "evidencia": "IC clásico ≈ IC bootstrap; variable aprox. simétrica."
+    },
+    {
+      "parámetro": "Media de WindGustSpeed",
+      "estimación": 40.0352,
+      "robusto": "Moderado",
+      "evidencia": "IC validado, pero sensible a outliers (~2.3%); usar también mediana/trimmed mean."
+    },
+    {
+      "parámetro": "Proporción RainTomorrow=Yes",
+      "estimación": 0.2242,
+      "robusto": true,
+      "evidencia": "Wilson ≈ bootstrap; usado exitosamente en simulación Monte Carlo."
+    },
+    {
+      "parámetro": "Diferencia MaxTemp (Yes-No)",
+      "estimación": -2.7171,
+      "robusto": true,
+      "evidencia": "Welch y permutación coinciden (p<0.001); efecto pequeño (d=-0.39)."
+    },
+    {
+      "parámetro": "Diferencia Humidity3pm (Yes-No)",
+      "estimación": 22.2894,
+      "robusto": true,
+      "evidencia": "Welch y permutación coinciden (p<0.001); efecto grande (d=1.20)."
+    }
+  ],
+  "correlaciones_validadas": [
+    {
+      "variable": "Humidity3pm",
+      "r_observado": 0.4461603787913109,
+      "IC95_inf": 0.4417854576190842,
+      "IC95_sup": 0.4504705963293747,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "RainToday_bin",
+      "r_observado": 0.313096745508967,
+      "IC95_inf": 0.30740464410331736,
+      "IC95_sup": 0.3188885072076607,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "Humidity9am",
+      "r_observado": 0.2571611603438016,
+      "IC95_inf": 0.2525651453797194,
+      "IC95_sup": 0.2615941692355465,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "Pressure9am",
+      "r_observado": -0.24637114625948037,
+      "IC95_inf": -0.25162673489172716,
+      "IC95_sup": -0.24114765697906065,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "Rainfall",
+      "r_observado": 0.239031801450613,
+      "IC95_inf": 0.23194563924103298,
+      "IC95_sup": 0.24619630946123897,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    },
+    {
+      "variable": "MinTemp",
+      "r_observado": 0.08393581350156311,
+      "IC95_inf": 0.07888557602651669,
+      "IC95_sup": 0.08916131501274929,
+      "incluye_cero": false,
+      "estabilidad": "Estable"
+    }
+  ],
+  "pruebas_permutacion": [
+    {
+      "variable": "Humidity3pm",
+      "diferencia_observada": 22.28939435126226,
+      "p_valor_parametrico_S1": 0.0,
+      "p_valor_permutacion": 9.999000099990002e-05
+    },
+    {
+      "variable": "MaxTemp",
+      "diferencia_observada": -2.7171465873533904,
+      "p_valor_parametrico_S1": 0.0,
+      "p_valor_permutacion": 9.999000099990002e-05
+    }
+  ],
+  "robustez_outliers": [
+    {
+      "variable": "MaxTemp",
+      "n": 144199,
+      "%_outliers_IQR": 0.3391146956636315,
+      "media_con_outliers": 23.22134827564685,
+      "media_sin_outliers": 23.24702038828196,
+      "trimmed_mean_10pct": 23.005512261509526,
+      "mediana": 22.6,
+      "cambio_relativo_%": -0.11055392792172034
+    },
+    {
+      "variable": "Humidity3pm",
+      "n": 140953,
+      "%_outliers_IQR": 0.0,
+      "media_con_outliers": 51.5391158755046,
+      "media_sin_outliers": 51.5391158755046,
+      "trimmed_mean_10pct": 51.40777560015253,
+      "mediana": 52.0,
+      "cambio_relativo_%": 0.0
+    },
+    {
+      "variable": "WindGustSpeed",
+      "n": 135197,
+      "%_outliers_IQR": 2.2870329962942963,
+      "media_con_outliers": 40.03523007167319,
+      "media_sin_outliers": 39.049907270731616,
+      "trimmed_mean_10pct": 39.03838792888248,
+      "mediana": 39.0,
+      "cambio_relativo_%": 2.4611393494619547
+    },
+    {
+      "variable": "Rainfall",
+      "n": 142199,
+      "%_outliers_IQR": 17.98746826630286,
+      "media_con_outliers": 2.3609181499166656,
+      "media_sin_outliers": 0.1554334125071814,
+      "trimmed_mean_10pct": 0.5339422121816791,
+      "mediana": 0.0,
+      "cambio_relativo_%": 93.41639978020129
+    }
+  ],
+  "simulacion_montecarlo": {
+    "n_simulaciones": 12000.0,
+    "ventana_días": 30.0,
+    "media_días_lluvia": 6.722666666666667,
+    "sd_días_lluvia": 2.2825978377473524,
+    "IC95_inf": 3.0,
+    "IC95_sup": 11.0,
+    "P(>=10 días de lluvia en el mes)": 0.11533333333333333,
+    "P(>=15 días de lluvia en el mes)": 0.0005
+  }
+}
