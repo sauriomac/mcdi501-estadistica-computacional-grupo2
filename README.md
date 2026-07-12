@@ -58,6 +58,15 @@ Además, esta evaluación incorpora explícitamente el feedback recibido en S1:
 * Tratamiento cuidadoso de `Rainfall` mediante `log1p`, winsorización y análisis de robustez.
 * Recomendaciones para S3 sobre imputación, métricas sensibles a clase minoritaria y partición temporal o por `Location`.
 
+### Evaluación Formativa 2: modelamiento predictivo
+
+* Modelamiento reproducible: [`notebooks/F2_Modelamiento_Predictivo.ipynb`](notebooks/F2_Modelamiento_Predictivo.ipynb).
+* Informe fuente: [`formativa-2-modelamiento-predictivo/F2_Modelamiento_Predictivo_WeatherAUS.tex`](formativa-2-modelamiento-predictivo/F2_Modelamiento_Predictivo_WeatherAUS.tex).
+* Informe compilado: [`formativa-2-modelamiento-predictivo/F2_Modelamiento_Predictivo_WeatherAUS.pdf`](formativa-2-modelamiento-predictivo/F2_Modelamiento_Predictivo_WeatherAUS.pdf).
+* Figuras del modelamiento: `results/figures_f2/`.
+
+La Formativa 2 integra los resultados de S1 y S2 en una primera línea base de clasificación para predecir `RainTomorrow`. Incluye preparación de datos, imputación sin fuga de información, transformación `log1p` de `Rainfall`, regresión logística, odds ratios, diagnóstico VIF, matriz de confusión, métricas de clasificación y curva ROC-AUC.
+
 ## Estructura
 
 * `data/raw/`: datasets originales.
@@ -65,6 +74,7 @@ Además, esta evaluación incorpora explícitamente el feedback recibido en S1:
 * `notebooks/`: análisis exploratorio, inferencial, validación, simulación y modelamiento.
 * `src/`: funciones reutilizables.
 * `results/figures/`: figuras generadas por los notebooks.
+* `results/figures_f2/`: figuras generadas por el notebook de Formativa 2.
 * `results/reports/`: reportes generados.
 * `docs/`: documentación adicional.
 * `formativa-*` y `sumativa-*`: fuentes y entregables de cada evaluación.
@@ -111,11 +121,13 @@ Abrir el notebook correspondiente y seleccionar **Kernel → Restart Kernel and 
 * Formativa 1: `notebooks/F1_Definicion.ipynb`.
 * Sumativa 1: `notebooks/S1_Definicion.ipynb`.
 * Sumativa 2: `notebooks/S2_Validacion.ipynb`.
+* Formativa 2: `notebooks/F2_Modelamiento_Predictivo.ipynb`.
 
 Al finalizar se generan:
 
 * Los datos procesados en `data/processed/weatherAUS.csv`.
 * Las figuras utilizadas por LaTeX en `results/figures/`.
+* Las figuras de Formativa 2 en `results/figures_f2/`.
 * Los reportes y tablas auxiliares en `results/reports/`.
 
 ### 3. Compilar los informes LaTeX
@@ -152,7 +164,15 @@ pdflatex sumativa-2-validacion-simulacion-remuestreo.tex
 pdflatex sumativa-2-validacion-simulacion-remuestreo.tex
 ```
 
-La primera compilación genera los archivos auxiliares; la segunda actualiza el índice y las referencias internas. LaTeX incorpora las figuras existentes en `results/figures/`, pero no las genera.
+Formativa 2:
+
+```bash
+cd formativa-2-modelamiento-predictivo
+pdflatex F2_Modelamiento_Predictivo_WeatherAUS.tex
+pdflatex F2_Modelamiento_Predictivo_WeatherAUS.tex
+```
+
+La primera compilación genera los archivos auxiliares; la segunda actualiza el índice y las referencias internas. LaTeX incorpora las figuras existentes en `results/figures/`, `results/figures_s2/` o `results/figures_f2/`, pero no las genera.
 
 ### 4. Abrir el PDF generado
 
@@ -197,11 +217,25 @@ xdg-open sumativa-2-validacion-simulacion-remuestreo.pdf
 Start-Process sumativa-2-validacion-simulacion-remuestreo.pdf
 ```
 
+Formativa 2:
+
+```bash
+# macOS
+open F2_Modelamiento_Predictivo_WeatherAUS.pdf
+
+# Linux
+xdg-open F2_Modelamiento_Predictivo_WeatherAUS.pdf
+
+# Windows (PowerShell)
+Start-Process F2_Modelamiento_Predictivo_WeatherAUS.pdf
+```
+
 ## Notas de reproducibilidad
 
 * Ejecutar siempre los notebooks desde la raíz del repositorio.
 * Verificar que exista el archivo `data/raw/weatherAUS.csv`.
 * Ejecutar `Kernel → Restart Kernel and Run All Cells` antes de compilar los informes.
 * No editar manualmente las figuras generadas por los notebooks.
-* Mantener las salidas de `results/figures/` y `results/reports/` sincronizadas con la versión final del notebook.
+* Mantener las salidas de `results/figures/`, `results/figures_s2/`, `results/figures_f2/` y `results/reports/` sincronizadas con la versión final del notebook.
 * La Sumativa 2 depende explícitamente de los resultados de la Sumativa 1, por lo que debe ejecutarse después de S1.
+* La Formativa 2 depende de los hallazgos de S1 y S2, por lo que conviene ejecutarla después de ambas evaluaciones.
