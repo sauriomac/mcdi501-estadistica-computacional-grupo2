@@ -1,0 +1,315 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,top=1.35cm,bottom=1.25cm,left=1.50cm,right=1.50cm]{geometry}
+\usepackage{graphicx,booktabs,tabularx,array,multirow,float}
+\usepackage[font=scriptsize,skip=1pt]{caption}
+\usepackage{xcolor,hyperref,fancyhdr,titlesec,enumitem,amsmath}
+\usepackage{microtype}
+\definecolor{teal}{HTML}{2F6B76}
+\definecolor{ochre}{HTML}{C0852F}
+\definecolor{brick}{HTML}{A4503E}
+\definecolor{ink}{HTML}{292929}
+\definecolor{panel}{HTML}{F4F0E8}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,citecolor=teal}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.2pt}
+\setlist[itemize]{leftmargin=4mm,itemsep=0.4pt,topsep=1.1pt}
+\setlist[enumerate]{leftmargin=5mm,itemsep=0.4pt,topsep=1.1pt}
+\titleformat{\section}{\large\bfseries\color{ink}}{\thesection}{.55em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{ink}}{\thesubsection}{.5em}{}
+\titlespacing*{\section}{0pt}{2.8pt}{1.2pt}
+\titlespacing*{\subsection}{0pt}{2pt}{0.8pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\footnotesize MCDI501 · Evaluación Sumativa 3}
+\rhead{\footnotesize WeatherAUS}
+\cfoot{\footnotesize Magíster en Ciencia de Datos e Inteligencia Artificial \hfill \thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\callout}[1]{\begin{center}\fcolorbox{teal}{panel}{\parbox{0.93\linewidth}{\small #1}}\end{center}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}p{1.48cm}}
+\graphicspath{{../results/figures/}{figures/}}
+\begin{document}
+
+% ---------------- PAGE 1 ----------------
+\thispagestyle{empty}
+\vspace*{0.1cm}
+\begin{center}
+\includegraphics[width=0.18\linewidth]{logo_unab.png}\par
+\vspace{0.35cm}
+{\small\bfseries MAGÍSTER EN CIENCIA DE DATOS E INTELIGENCIA ARTIFICIAL\par}
+{\small MCDI501: Estadística Computacional para la Toma de Decisiones\par}
+\vspace{1.55cm}
+{\Huge\bfseries Evaluación Sumativa 3\par}
+\vspace{0.25cm}
+{\LARGE\color{teal} Modelamiento predictivo integrado\par}
+\vspace{0.75cm}
+{\Large\bfseries Predicción de lluvia del día siguiente en Australia\par}
+\vspace{1.25cm}
+\renewcommand{\arraystretch}{1.42}
+\begin{tabularx}{\linewidth}{>{\bfseries}p{3.7cm}Y}
+Integrantes & Enzo Pinilla · Claudio Alarcón · Luis Rodrigo Espinoza \\
+Dataset & WeatherAUS / Rain in Australia (Kaggle, 2017) \\
+Docente & Dr. Jean Paul Maidana González \\
+Fecha & Julio de 2026 \\
+Repositorio & \url{https://github.com/sauriomac/mcdi501-estadistica-computacional-grupo2} \\
+Notebook maestro & \code{s3\_modelamiento\_final.ipynb} \\
+\end{tabularx}
+\vfill
+\vspace{0.35cm}
+\end{center}
+
+\clearpage
+% ---------------- PAGE 2 ----------------
+\subsection*{Conexión con evaluaciones anteriores}
+S1 identificó el desbalance de \code{RainTomorrow} (22,4\% de casos positivos), los faltantes altos en \code{Sunshine} y \code{Evaporation}, las colas pesadas de \code{Rainfall} y \code{WindGustSpeed}, y la casi colinealidad \code{MaxTemp}--\code{Temp3pm}. S2 validó mediante bootstrap y permutación las señales más estables, confirmó la cero-inflación de \code{Rainfall} y advirtió la dependencia por estación meteorológica. S3 convierte esos hallazgos en decisiones reproducibles: partición temporal, imputación aprendida solo en entrenamiento, \code{log1p(Rainfall)}, control VIF, ponderación de clase y métricas sensibles a la clase minoritaria.
+
+\subsection*{Índice}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\linewidth}{p{0.8cm}Yp{1.0cm}}
+1 & Manejo inteligente de datos faltantes & 3--4\\
+2 & Clasificación mediante regresión logística & 4--8\\
+3 & Impacto de la estrategia de imputación & 6\\
+4 & Síntesis integrada y conclusiones & 6\\
+5 & Bibliografía & 7\\
+\end{tabularx}
+
+\subsection*{Reproducibilidad y ausencia de fuga}
+El notebook maestro se guardó después de \textit{Restart Kernel and Run All Cells}, con las ocho celdas de código numeradas correlativamente y semilla fija 42. Todas las tablas y figuras del informe provienen de esa misma corrida. La imputación, el escalamiento, los límites de winsorización y la selección se aprenden exclusivamente con el entrenamiento temporal; el 30\% más reciente permanece fuera del ajuste. La implementación utiliza \code{scikit-learn} y \code{statsmodels} (Pedregosa et al., 2011; Seabold y Perktold, 2010).
+
+\callout{\textbf{Criterio de evaluación.} La prueba final es temporal: se entrena con el pasado y se evalúa en observaciones cronológicamente posteriores. La validación agrupada por \code{Location} se mantiene como extensión espacial, no como sustituto de la prueba temporal.}
+
+\clearpage
+% ---------------- PAGE 3 ----------------
+\section{Manejo inteligente de datos faltantes}
+\subsection{Referencia a S1 y mecanismo de ausencia}
+S1 cuantificó los faltantes; S3 usa esos resultados como insumo en lugar de repetir el EDA. Las mayores tasas corresponden a \code{Sunshine} (48,01\%), \code{Evaporation} (43,17\%), \code{Cloud3pm} (40,81\%) y \code{Cloud9am} (38,42\%). La asociación entre ausencia y \code{Location} es fuerte: los V de Cramér fluctúan entre 0,776 y 0,909, con $p<0{,}001$. Por ello se adopta MAR como supuesto de trabajo, sin afirmar que MNAR haya sido descartado (Little y Rubin, 2019).
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Principales faltantes y evidencia del mecanismo de ausencia.}
+\begin{tabular}{lrrr}
+\toprule
+Variable & Faltantes & \% & V de Cramér con Location\\
+\midrule
+Sunshine & 69.835 & 48,01 & 0,859\\
+Evaporation & 62.790 & 43,17 & 0,858\\
+Cloud3pm & 59.358 & 40,81 & 0,776\\
+Cloud9am & 55.888 & 38,42 & 0,814\\
+Pressure9am & 15.065 & 10,36 & 0,908\\
+WindGustSpeed & 10.263 & 7,06 & 0,782\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Imputación mediante regresión lineal múltiple}
+Para cada variable numérica incompleta se eligieron entre tres y cinco predictores a partir de la matriz de correlaciones de S1, priorizando secundariamente señales estables de S2. Cada regresión se ajustó con casos completos del período de entrenamiento y se aplicó después a entrenamiento y prueba. \code{RainToday} se imputó por moda, por ser binaria. Las predicciones se acotaron a dominios físicamente plausibles.
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Ejemplos de modelos de imputación y validación temporal.}
+\begin{tabularx}{\linewidth}{lrrrY}
+\toprule
+Variable & Imp. entren. & Imp. prueba & $R^2$ val. & Predictores principales\\
+\midrule
+Sunshine & 37.576 & 30.240 & 0,691 & Cloud3pm, Cloud9am, humedades y Temp3pm\\
+Evaporation & 34.291 & 26.552 & 0,445 & MaxTemp, Temp3pm, Temp9am, Humidity9am y MinTemp\\
+Pressure9am & 8.607 & 5.407 & 0,938 & Pressure3pm, WindGustSpeed, MinTemp, Temp9am y MaxTemp\\
+WindGustSpeed & 6.490 & 2.780 & 0,628 & velocidades de viento, presiones y Humidity9am\\
+Rainfall & 924 & 482 & 0,260 & RainToday, humedades, Sunshine y Cloud9am\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Los modelos de temperatura y presión alcanzan ajustes altos; \code{Rainfall} es más difícil por su cero-inflación y cola extrema. La imputación determinista por regresión puede encoger la varianza; por ello se compara con eliminación e imputación simple y se propone imputación múltiple como mejora futura.
+
+% ---------------- PAGE 4 ----------------
+\subsection{Comparación de estrategias y partición}
+Se compararon eliminación, imputación simple e imputación mediante regresión lineal múltiple. La regresión preservó mejor que la mediana la correlación de \code{Sunshine} con el objetivo ($-0{,}397$ frente a $-0{,}324$), y mantuvo relaciones próximas a las observadas para \code{Humidity3pm}, \code{Pressure9am} y \code{Rainfall\_log1p}. La decisión final se basa también en el desempeño del mismo modelo, no solo en distribuciones marginales.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.62\linewidth]{s3_fig1_imputacion_diagnostico.png}
+\caption{Distribuciones observadas e imputadas y residuos frente a valores ajustados para variables de alta ausencia.}
+\end{figure}
+
+\section{Clasificación mediante regresión logística}
+\subsection{Preparación informada por S1 y S2}
+Se ordenaron las fechas y se reservó el 30\% más reciente como prueba: 93.076 registros hasta el 29-08-2014 para entrenamiento y 49.117 registros posteriores para prueba. Las tasas positivas son 22,81\% y 21,67\%, respectivamente. Esta partición evita utilizar información futura para estimar desempeño.
+
+\begin{itemize}
+\item \code{Rainfall} se transforma mediante $\log(1+x)$; \code{WindGustSpeed} se winsoriza en percentiles 1--99 aprendidos en entrenamiento.
+\item Los predictores se estandarizan con parámetros del entrenamiento y la ponderación de clase se reserva para la predicción.
+\item La inferencia de coeficientes y razones de momios se realiza con Logit no ponderado, para comparar homogéneamente Wald y bootstrap.
+\item El control preliminar elimina \code{Pressure3pm} ($VIF=19{,}01$) y evita usar simultáneamente \code{MaxTemp} y \code{Temp3pm}.
+\end{itemize}
+
+% ---------------- PAGE 5 ----------------
+\subsection{Selección de variables informada por S1 y S2}
+Se ejecutaron por separado los modelos exigidos: M1 guiado por S1/S2, M2 con eliminación stepwise y M3 basado en BIC. Se añadió M4 como contraste reducido de parsimonia. La validación interna usa particiones temporales consecutivas, no folds aleatorios (James et al., 2013; Maidana, 2026).
+
+\begin{itemize}
+\item \textbf{M1 Dominio (5):} \code{Humidity3pm}, \code{RainToday}, \code{Pressure9am}, \code{Rainfall\_log1p} y \code{WindGustSpeed}.
+\item \textbf{M2 Stepwise (13):} elimina \code{RainToday} por falta de aporte condicional y conserva variables meteorológicas y estacionales.
+\item \textbf{M3 BIC (14):} retiene las 13 de M2 más \code{RainToday}; su desempeño es prácticamente idéntico.
+\item \textbf{M4 Reducido (8):} sirve como contraste parsimonioso, pero pierde discriminación en la prueba temporal.
+\end{itemize}
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Modelos y desempeño en prueba temporal (umbral 0,5; clases ponderadas).}
+\begin{tabular}{lrrrrrr}
+\toprule
+Modelo & Vars. & Accuracy & Precision & Recall & F1 & AUC\\
+\midrule
+M1 Dominio S1/S2 & 5 & 0,777 & 0,490 & 0,721 & 0,583 & 0,834\\
+M2 Stepwise & 13 & 0,785 & 0,502 & 0,743 & 0,599 & 0,852\\
+M3 BIC & 14 & 0,785 & 0,502 & 0,743 & 0,599 & 0,852\\
+M4 Reducido & 8 & 0,770 & 0,480 & 0,723 & 0,577 & 0,832\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+M2 obtiene AUC temporal interno $0{,}86498\pm0{,}00442$ y M3 $0{,}86497\pm0{,}00443$. Como la diferencia es despreciable y M2 utiliza una variable menos, se adopta \textbf{M2 Stepwise} como modelo final. El conjunto de prueba no intervino en esta decisión.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.56\linewidth]{s3_fig3_curvas_roc.png}
+\caption{Curvas ROC de las cuatro especificaciones en la prueba temporal.}
+\end{figure}
+
+\subsection{Coeficientes y lectura contextual}
+Los predictores estandarizados permiten interpretar cada OR por una desviación estándar. \code{Humidity3pm} es la señal principal ($OR=2{,}93$), seguida de \code{WindGustSpeed} ($OR=2{,}00$) y \code{Temp3pm} ($OR=1{,}59$). \code{Sunshine} ($OR=0{,}63$) y \code{Pressure9am} ($OR=0{,}71$) actúan como factores protectores. Estas asociaciones no se interpretan como causalidad (Hosmer et al., 2013).
+
+% ---------------- PAGE 6 ----------------
+\subsection{Estabilidad mediante bootstrap}
+Siguiendo el enfoque de S2, se aplicaron 500 remuestras bootstrap de tamaño completo al Logit no ponderado. Cada remuestra reajusta los 13 coeficientes por máxima verosimilitud; el número es menor que las 10.000 remuestras de S2 debido al costo de reajustar un modelo completo. Se construyeron intervalos percentiles al 95\% y se compararon con Wald (Efron y Tibshirani, 1993).
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Coeficientes y OR del modelo final con IC bootstrap percentil al 95\%.}
+\begin{tabular}{lrrr}
+\toprule
+Variable & Coeficiente [IC95] & OR [IC95] & Estable\\
+\midrule
+Humidity3pm & 1,075 [1,045; 1,108] & 2,929 [2,842; 3,029] & Sí\\
+WindGustSpeed & 0,694 [0,665; 0,725] & 2,002 [1,945; 2,065] & Sí\\
+Sunshine & -0,461 [-0,497; -0,428] & 0,631 [0,608; 0,652] & Sí\\
+Pressure9am & -0,348 [-0,370; -0,326] & 0,706 [0,691; 0,722] & Sí\\
+Rainfall\_log1p & 0,241 [0,223; 0,261] & 1,273 [1,250; 1,298] & Sí\\
+Temp3pm & 0,464 [0,433; 0,496] & 1,591 [1,541; 1,641] & Sí\\
+Cloud3pm & 0,284 [0,251; 0,317] & 1,328 [1,286; 1,374] & Sí\\
+Humidity9am & 0,095 [0,063; 0,129] & 1,100 [1,065; 1,138] & Sí\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.55\linewidth]{s3_fig5_bootstrap_or.png}
+\caption{Razones de momios e intervalos bootstrap. Ningún intervalo cruza OR=1.}
+\end{figure}
+
+Ningún parámetro del modelo final resulta inestable. La cercanía entre los intervalos bootstrap y Wald es plausible con más de 93 mil observaciones, pero el remuestreo aporta una comprobación empírica y conecta directamente S2 con S3.
+
+% ---------------- PAGE 7 ----------------
+\subsection{Diagnóstico de supuestos}
+\textbf{Multicolinealidad.} El VIF máximo es 3,95 (\code{Sunshine}); todos quedan bajo el umbral de 5. El control previo resolvió la redundancia de presiones y temperaturas.
+
+\textbf{Linealidad en el logit.} El diagnóstico tipo Box--Tidwell encuentra posible no linealidad en nueve predictores, relacionados con humedad, lluvia transformada, horas de sol, evaporación, nubosidad, temperatura, viento vespertino y el ciclo estacional. Esto no invalida la utilidad predictiva, pero limita la lectura lineal de los coeficientes y motiva splines o transformaciones futuras (Hosmer et al., 2013).
+
+\textbf{Residuos e influencia.} En una muestra reproducible de 25.000 observaciones, 2,044\% presenta $|r_{Pearson}|>3$. La distancia de Cook máxima es 0,0028 y el leverage máximo 0,0254; no aparece una sola observación que domine el ajuste. El umbral $4/n$ se interpreta con cautela porque se vuelve muy pequeño en muestras grandes.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.48\linewidth}
+\includegraphics[width=\linewidth]{s3_fig7_vif.png}
+\end{minipage}\hfill
+\begin{minipage}{.48\linewidth}
+\includegraphics[width=\linewidth]{s3_fig6_residuos_influencia.png}
+\end{minipage}
+\caption{VIF del modelo final y diagnóstico de residuos e influencia.}
+\end{figure}
+
+\callout{\textbf{Lectura crítica.} El modelo es estable y no presenta multicolinealidad severa, pero varias relaciones no son estrictamente lineales en el logit. Por ello se presenta como línea base interpretable, no como forma funcional definitiva.}
+
+% ---------------- PAGE 8 ----------------
+\subsection{Evaluación de desempeño predictivo}
+El AUC del modelo final es 0,867 en entrenamiento y 0,852 en prueba temporal. La caída es moderada y esperable por el cambio de período; no se observa sobreajuste severo. En prueba se obtienen 30.629 verdaderos negativos, 7.842 falsos positivos, 2.734 falsos negativos y 7.912 verdaderos positivos.
+
+\begin{table}[H]
+\centering\small
+\caption{Desempeño del modelo final en entrenamiento y prueba.}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Partición & Accuracy & Precision & Recall & Espec. & F1 & ROC-AUC & PR-AUC\\
+\midrule
+Entrenamiento & 0,790 & 0,526 & 0,772 & 0,795 & 0,626 & 0,867 & 0,696\\
+Prueba temporal & 0,785 & 0,502 & 0,743 & 0,796 & 0,599 & 0,852 & 0,655\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.68\linewidth]{s3_fig4_desempeno_final.png}
+\caption{ROC de las cuatro especificaciones y matrices del modelo final en entrenamiento y prueba temporal.}
+\end{figure}
+
+La ponderación de clase recupera 74,3\% de los días con lluvia. La precisión de 50,2\% refleja el costo de esa sensibilidad: aproximadamente la mitad de las alertas positivas son falsas. El umbral 0,5 es un punto operativo inicial y debe calibrarse según el costo relativo de no anticipar lluvia frente a emitir una alerta innecesaria. El PR-AUC complementa al ROC-AUC al concentrarse en la clase minoritaria.
+
+% ---------------- PAGE 9 ----------------
+\section{Análisis comparativo del impacto de la imputación}
+\begin{table}[H]
+\centering\scriptsize
+\caption{Modelo final ajustado con las tres estrategias de tratamiento de faltantes.}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Estrategia & $n$ prueba & Accuracy & Precision & Recall & F1 & AUC & PR-AUC\\
+\midrule
+Eliminación & 15.195 & 0,805 & 0,527 & 0,742 & 0,616 & 0,871 & 0,681\\
+Imputación simple & 49.117 & 0,794 & 0,518 & 0,714 & 0,601 & 0,850 & 0,653\\
+Imputación por regresión & 49.117 & 0,785 & 0,502 & 0,743 & 0,599 & 0,852 & 0,655\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La eliminación parece alcanzar mayor AUC, pero reduce la prueba de 49.117 a 15.195 casos y selecciona estaciones o períodos con instrumentos completos. Evalúa una población distinta, por lo que no demuestra superioridad general. Entre las estrategias comparables de igual tamaño, la imputación por regresión conserva todos los casos y alcanza el mayor recall y PR-AUC. Se adopta como estrategia principal, reconociendo el posible encogimiento de varianza.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.38\linewidth}
+\includegraphics[width=\linewidth]{s3_fig8_impacto_imputacion.png}
+\end{minipage}\hfill
+\begin{minipage}{.45\linewidth}
+\includegraphics[width=\linewidth]{s3_fig9_coeficientes_imputacion.png}
+\end{minipage}
+\caption{Impacto de la imputación en métricas y coeficientes del modelo final.}
+\end{figure}
+
+\section{Síntesis integrada y conclusiones}
+\textbf{Resumen ejecutivo.} El proyecto entrega un modelo temporalmente evaluado con ROC-AUC 0,852, PR-AUC 0,655 y recall 0,743. La lluvia del día siguiente se asocia principalmente con humedad vespertina, ráfagas, temperatura, nubosidad y lluvia reciente; mayor presión y horas de sol reducen las odds. Los coeficientes son estables bajo 500 remuestras y no presentan VIF problemático.
+
+\textbf{Discusión y recomendaciones.} La principal limitación es la no linealidad de varios predictores en el logit. Se recomienda calibrar el umbral según costos, complementar la prueba temporal con validación agrupada por \code{Location}, explorar splines e imputación múltiple, y monitorear calibración y estabilidad en nuevos años. El modelo debe apoyar, no sustituir, decisiones meteorológicas u operativas.
+
+% ---------------- PAGE 10 ----------------
+\clearpage
+\section{Bibliografía}
+\footnotesize
+Efron, B., \& Tibshirani, R. J. (1993). \textit{An introduction to the bootstrap}. Chapman \& Hall.\par
+Hosmer, D. W., Lemeshow, S., \& Sturdivant, R. X. (2013). \textit{Applied logistic regression} (3.ª ed.). Wiley.\par
+James, G., Witten, D., Hastie, T., \& Tibshirani, R. (2013). \textit{An introduction to statistical learning}. Springer.\par
+Kaggle. (2017). \textit{Rain in Australia} [Conjunto de datos]. \url{https://www.kaggle.com/datasets/jsphyg/weather-dataset-rattle-package}.\par
+Little, R. J. A., \& Rubin, D. B. (2019). \textit{Statistical analysis with missing data} (3.ª ed.). Wiley.\par
+Maidana, J. P. (2026). \textit{Selección de variables y comparación de modelos} [Apunte del curso MCDI501]. Universidad Andrés Bello.\par
+Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. \textit{Journal of Machine Learning Research, 12}, 2825--2830.\par
+Seabold, S., \& Perktold, J. (2010). Statsmodels: Econometric and statistical modeling with Python. \textit{Proceedings of the 9th Python in Science Conference}, 92--96.\par
+
+\vfill
+\begin{center}\small\bfseries Todas las cifras y figuras de este informe provienen de una única ejecución del notebook maestro.\end{center}
+\end{document}

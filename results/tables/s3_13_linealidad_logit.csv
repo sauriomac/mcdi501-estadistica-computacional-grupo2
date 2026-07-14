@@ -1,0 +1,14 @@
+variable,p_value_xlogx,lectura
+Humidity3pm,0.0008288593830094376,posible no linealidad
+Humidity9am,0.8923275919253659,sin evidencia fuerte
+Pressure9am,0.06371248820951067,sin evidencia fuerte
+Rainfall_log1p,0.003902609496399241,posible no linealidad
+WindGustSpeed,0.31535003735685285,sin evidencia fuerte
+Sunshine,0.00011773504699614276,posible no linealidad
+Evaporation,9.781290963924583e-06,posible no linealidad
+Cloud3pm,0.03729430503741958,posible no linealidad
+Cloud9am,0.0014587578542619608,posible no linealidad
+Temp3pm,6.178542427806796e-08,posible no linealidad
+WindSpeed3pm,0.010027847449986914,posible no linealidad
+Month_sin,0.23714431394440294,sin evidencia fuerte
+Month_cos,0.021041900716844905,posible no linealidad

@@ -1,0 +1,18 @@
+variable,valores_imputados,método,predictores,R2_fit,RMSE_fit,n_entrenamiento_completo
+MinTemp,637,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.2746307978726453,5.387656918675666,124382
+MaxTemp,322,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.4080281426052206,5.338017221975847,124419
+Rainfall,1406,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Sunshine,0.2428693639540097,7.771663528438615,73163
+Evaporation,60843,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.316586418709462,3.4539119719486253,78979
+Sunshine,67816,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.4112272889042048,2.9001475806018795,73163
+WindGustSpeed,9270,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.2597573109403636,11.598403807316908,119816
+WindSpeed9am,1348,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.16146453914732406,8.068379687751676,124236
+WindSpeed3pm,2630,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.11408539482039493,8.195002277623551,124256
+Humidity9am,1774,regresión lineal múltiple,Humidity3pm | RainToday_bin | Pressure9am | Rainfall | Evaporation,0.5682467149504441,12.488915505125007,124470
+Humidity3pm,3610,regresión lineal múltiple,RainToday_bin | Humidity9am | Pressure9am | Rainfall | Sunshine,0.6366507964909225,12.458238300350219,124689
+Pressure9am,14014,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Rainfall | Pressure3pm,0.9348621911678681,1.8132546736959707,126858
+Pressure3pm,13981,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.9331690311220691,1.8187652509619405,127018
+Cloud9am,53657,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.304448170060292,2.407398200849363,88162
+Cloud3pm,57094,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.2913342249938242,2.2895362666596752,84693
+Temp9am,904,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.34704337835783905,5.249131589888584,140131
+Temp3pm,2726,regresión lineal múltiple,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Rainfall,0.41140888583321666,5.322627528798567,138163
+RainToday_bin,1406,regresión lineal múltiple,Humidity3pm | Humidity9am | Pressure9am | Rainfall | Sunshine,0.3545012688160296,0.33465986600403164,140787

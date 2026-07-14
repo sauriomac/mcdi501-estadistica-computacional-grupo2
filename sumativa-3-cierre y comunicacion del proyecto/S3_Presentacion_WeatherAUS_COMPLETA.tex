@@ -1,0 +1,423 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\definecolor{unabblue}{HTML}{003B71}
+\definecolor{teal}{HTML}{2F6B76}
+\definecolor{ochre}{HTML}{C0852F}
+\definecolor{ink}{HTML}{292929}
+\definecolor{panel}{HTML}{F4F0E8}
+
+\usetheme{Madrid}
+\usecolortheme[named=teal]{structure}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=\paperwidth,ht=2.4ex,dp=1ex,right]{author in head/foot}%
+    \scriptsize\insertshorttitle\hspace{0.6cm}\insertframenumber/\inserttotalframenumber\hspace{0.3cm}
+  \end{beamercolorbox}}%
+}
+\setbeamertemplate{itemize item}{\color{ochre}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{teal}$\bullet$}
+\setbeamertemplate{caption}[numbered]
+\setbeamercolor{title}{fg=unabblue}
+\setbeamercolor{frametitle}{fg=unabblue,bg=panel}
+\setbeamercolor{block title}{fg=white,bg=teal}
+\setbeamercolor{block body}{fg=ink,bg=panel}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setlength{\tabcolsep}{4pt}
+\graphicspath{{../results/figures/}}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\metric}[3]{%
+  \begingroup
+  \setlength{\fboxsep}{0pt}%
+  \colorbox{panel}{%
+    \begin{minipage}[t][1.85cm][c]{\linewidth}
+      \begin{beamercolorbox}[wd=\linewidth,ht=0.45cm,dp=0.12cm,leftskip=0.12cm]{block title}
+        \scriptsize\bfseries #1
+      \end{beamercolorbox}
+      \vspace{0.08cm}
+      \centering
+      {\Large\bfseries #2}\\[-1pt]
+      {\scriptsize #3}
+    \end{minipage}%
+  }%
+  \endgroup
+}
+\newcommand{\phasecard}[3]{%
+  \begingroup
+  \setlength{\fboxsep}{0pt}%
+  \colorbox{panel}{%
+    \begin{minipage}[t][2.35cm][t]{\linewidth}
+      \begin{beamercolorbox}[wd=\linewidth,ht=0.45cm,dp=0.12cm,leftskip=0.12cm]{block title}
+        \scriptsize\bfseries #1
+      \end{beamercolorbox}
+      \vspace{0.16cm}
+      \centering
+      {\normalsize\bfseries #2\par}
+      \vfill
+      {\scriptsize #3\par}
+      \vspace{0.14cm}
+    \end{minipage}%
+  }%
+  \endgroup
+}
+\newcommand{\figcaption}[1]{\par\vspace{0.03cm}\centering{\scriptsize\color{ink}#1}\par}
+
+\title[Sumativa 3 · WeatherAUS]{Evaluación Sumativa 3\\Modelamiento predictivo integrado}
+\subtitle{Predicción de lluvia del día siguiente en Australia}
+\author{Enzo Pinilla · Claudio Alarcón · Luis Rodrigo Espinoza}
+\institute{MCDI501 · Dr. Jean Paul Maidana González}
+\date{Julio 2026}
+
+\begin{document}
+
+\begin{frame}[plain]
+\begin{center}
+\includegraphics[width=0.13\linewidth]{logo_unab.png}\\[0.25cm]
+{\small MCDI501 · Sumativa 3 · Grupo 2}\\[0.2cm]
+{\Large\bfseries Evaluación Sumativa 3}\\[0.08cm]
+{\large\color{teal} Modelamiento predictivo integrado}\\[0.18cm]
+{\normalsize Predicción de lluvia del día siguiente en Australia}\\[0.28cm]
+{\small Enzo Pinilla · Claudio Alarcón · Luis Rodrigo Espinoza}\\
+{\small Dr. Jean Paul Maidana González · Julio 2026}
+\end{center}
+\vspace{0.15cm}
+\begin{block}{Idea central}
+El proyecto convierte hallazgos estadísticos previos en decisiones de modelamiento reproducibles.
+\end{block}
+\end{frame}
+
+\begin{frame}{Ruta de la presentación}
+\begin{columns}[T,onlytextwidth]
+\column{0.32\textwidth}
+\phasecard{S1}{¿Qué hay en los datos?}{Faltantes, desbalance, outliers y correlaciones.}
+\column{0.32\textwidth}
+\phasecard{S2}{¿Qué resultados son estables?}{Bootstrap, permutación, Monte Carlo y robustez.}
+\column{0.32\textwidth}
+\phasecard{S3}{¿Qué modelo funciona fuera de muestra?}{Imputación, selección, diagnóstico y prueba temporal.}
+\end{columns}
+\vspace{0.2cm}
+\begin{block}{Principio rector}
+Ninguna decisión de S3 se toma desde cero: cada transformación y variable se rastrea a evidencia previa.
+\end{block}
+\end{frame}
+
+\begin{frame}{S1: señales y problemas que condicionan el modelo}
+\framesubtitle{El análisis exploratorio se convierte en decisiones técnicas}
+\begin{columns}[T,onlytextwidth]
+\column{0.24\textwidth}
+\metric{Clase positiva}{22,4 \%}{RainTomorrow = Yes}
+\column{0.24\textwidth}
+\metric{Faltantes}{48,0 \%}{Sunshine; Evaporation 43,2 \%}
+\column{0.24\textwidth}
+\metric{Colinealidad}{$r \approx 0{,}985$}{MaxTemp--Temp3pm}
+\column{0.24\textwidth}
+\metric{Rainfall}{Cero-inflada}{Cola derecha extrema}
+\end{columns}
+\vspace{0.15cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.49\textwidth}
+\begin{block}{Señales relevantes}
+\begin{itemize}
+\item Humidity3pm: asociación positiva más fuerte.
+\item RainToday y Rainfall: persistencia de precipitación.
+\item Pressure9am: asociación protectora.
+\item WindGustSpeed: señal útil, sensible a extremos.
+\end{itemize}
+\end{block}
+\column{0.49\textwidth}
+\begin{block}{Consecuencias para S3}
+\begin{itemize}
+\item Imputar en vez de borrar casos completos.
+\item No usar MaxTemp y Temp3pm simultáneamente.
+\item Aplicar \texttt{log1p} a Rainfall.
+\item Usar métricas sensibles a la clase minoritaria.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{S2: validación y retroalimentación}
+\framesubtitle{La evidencia validada define la arquitectura del modelo final}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Validado en S2}
+\begin{itemize}
+\item Correlaciones estables: Humidity3pm, RainToday, Humidity9am, Pressure9am y Rainfall.
+\item Permutación con estadístico studentizado y $p<0{,}001$.
+\item Bootstrap coherente con intervalos clásicos.
+\item Rainfall requiere lectura robusta y \texttt{log1p}.
+\end{itemize}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Retroalimentación incorporada}
+\begin{itemize}
+\item Notebook ejecutable de principio a fin.
+\item Cada cifra sale de la misma corrida.
+\item Ponderación de clase y métricas minoritarias.
+\item Partición temporal o agrupada por Location.
+\end{itemize}
+\end{block}
+\end{columns}
+\begin{columns}[T,onlytextwidth]
+\column{0.32\textwidth}
+\metric{Entrenamiento}{93.076}{Hasta 29-08-2014}
+\column{0.32\textwidth}
+\metric{Prueba temporal}{49.117}{Posterior al corte}
+\column{0.32\textwidth}
+\metric{Semilla}{42}{Reproducibilidad}
+\end{columns}
+\end{frame}
+
+\begin{frame}{S3: reproducibilidad y ausencia de fuga}
+\framesubtitle{Preparación aprendida solo desde el entrenamiento temporal}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Flujo reproducible}
+\begin{enumerate}
+\item Cargar datos y excluir \texttt{RISK\_MM}.
+\item Ordenar por fecha.
+\item Separar 70 \% entrenamiento y 30 \% prueba.
+\item Aprender imputación, escalamiento y selección.
+\item Evaluar en prueba temporal intacta.
+\end{enumerate}
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Qué se aprende solo con entrenamiento}
+\begin{itemize}
+\item Modelos de imputación.
+\item Medianas y modas.
+\item Parámetros de estandarización.
+\item Límites de winsorización.
+\item Selección de variables.
+\end{itemize}
+\end{block}
+\end{columns}
+\begin{block}{Resultado}
+El desempeño reportado se mide sobre datos cronológicamente posteriores, no sobre una mezcla aleatoria.
+\end{block}
+\end{frame}
+
+\begin{frame}{Manejo de faltantes sin fuga de información}
+\framesubtitle{Regresiones lineales múltiples aprendidas solo en entrenamiento}
+\begin{columns}[T,onlytextwidth]
+\column{0.23\textwidth}
+\metric{Sunshine}{$R^2=0{,}691$}{67.816 imputados}
+\column{0.23\textwidth}
+\metric{Evaporation}{$R^2=0{,}445$}{60.843 imputados}
+\column{0.23\textwidth}
+\metric{Pressure9am}{$R^2=0{,}938$}{14.014 imputados}
+\column{0.23\textwidth}
+\metric{Rainfall}{$R^2=0{,}260$}{Cero-inflación}
+\end{columns}
+\vspace{0.15cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.42\textwidth}
+\begin{block}{Estrategias comparadas}
+\begin{itemize}
+\item Eliminación de casos completos.
+\item Mediana / moda.
+\item Regresión lineal múltiple seleccionada.
+\end{itemize}
+\end{block}
+\begin{block}{Supuesto declarado}
+MAR es plausible por relación entre faltantes y Location; MNAR no se descarta.
+\end{block}
+\column{0.55\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=3.7cm,keepaspectratio]{s3_fig1_imputacion_diagnostico.png}
+\figcaption{Diagnóstico de imputación generado por el notebook S3.}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modelos solicitados y selección trazable}
+\framesubtitle{Stepwise y BIC se ejecutan por separado; el final se elige con CV temporal}
+\begin{table}
+\scriptsize
+\begin{tabularx}{\linewidth}{lrrrrY}
+\toprule
+Modelo & Variables & AUC test & Recall & Decisión\\
+\midrule
+M1 Dominio S1/S2 & 5 & 0,834 & 0,721 & Base con evidencia previa\\
+M2 Stepwise & 13 & 0,852 & 0,743 & Modelo final\\
+M3 BIC & 14 & 0,852 & 0,743 & Mismo rendimiento, menos parsimonia\\
+M4 Reducido & 8 & 0,832 & 0,723 & Contraste parsimonioso\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\begin{block}{Supuesto declarado}
+M2 Stepwise: CV-AUC $=0{,}86498 \pm 0{,}00442$. M3 rinde igual, pero usa una variable más; M2 queda por parsimonia.
+\end{block}
+\end{frame}
+
+\begin{frame}{Desempeño en prueba temporal}
+\framesubtitle{Buena discriminación y 74 \% de recuperación de días lluviosos}
+\begin{columns}[T,onlytextwidth]
+\column{0.155\textwidth}
+\metric{ROC-AUC}{0,852}{Bueno}
+\column{0.155\textwidth}
+\metric{PR-AUC}{0,655}{Clase positiva}
+\column{0.155\textwidth}
+\metric{Recall}{0,743}{7.912 VP}
+\column{0.155\textwidth}
+\metric{Precision}{0,502}{7.842 FP}
+\column{0.155\textwidth}
+\metric{F1}{0,599}{Equilibrio}
+\column{0.155\textwidth}
+\metric{Accuracy}{0,785}{Test temporal}
+\end{columns}
+\vspace{0.12cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.32\textwidth}
+\begin{table}
+\small
+\begin{tabular}{lrr}
+\toprule
+ & Pred. No & Pred. Sí\\
+\midrule
+Real No & 30.629 & 7.842\\
+Real Sí & 2.734 & 7.912\\
+\bottomrule
+\end{tabular}
+\end{table}
+\column{0.34\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=3.0cm,keepaspectratio]{s3_fig3_curvas_roc.png}
+\figcaption{Curvas ROC.}
+\column{0.30\textwidth}
+\begin{block}{Interpretación operativa}
+La ponderación recupera 74,3 \% de los días lluviosos. El costo es emitir más falsas alarmas; el umbral debe calibrarse según contexto.
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Estabilidad de coeficientes}
+\framesubtitle{Bootstrap conecta la validación de S2 con el modelo de S3}
+\begin{columns}[T,onlytextwidth]
+\column{0.31\textwidth}
+\metric{Bootstrap}{B = 500}{Reajustes completos}
+\column{0.31\textwidth}
+\metric{Inestables}{0}{Ningún IC cruza OR=1}
+\column{0.31\textwidth}
+\metric{Train}{93.076}{Logit no ponderado}
+\end{columns}
+\vspace{0.12cm}
+\begin{columns}[T,onlytextwidth]
+\column{0.38\textwidth}
+\begin{block}{Principales odds ratios}
+\begin{itemize}
+\item Humidity3pm: OR 2,93.
+\item WindGustSpeed: OR 2,00.
+\item Temp3pm: OR 1,59.
+\item Sunshine: OR 0,63.
+\item Pressure9am: OR 0,71.
+\end{itemize}
+\end{block}
+\column{0.58\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=3.9cm,keepaspectratio]{s3_fig5_bootstrap_or.png}
+\figcaption{Intervalos bootstrap de los OR del modelo final.}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Diagnóstico: estable, pero no definitivo}
+\framesubtitle{Métricas separadas y gráficos de diagnóstico del modelo}
+\begin{columns}[T,onlytextwidth]
+\column{0.43\textwidth}
+\begin{columns}[T,totalwidth=\linewidth]
+\column{0.48\linewidth}
+\metric{VIF máximo}{3,95}{Menor que 5}
+\column{0.48\linewidth}
+\metric{Pearson $>3$}{2,04 \%}{Muestra 25 mil}
+\end{columns}
+\vspace{0.18cm}
+\begin{columns}[T,totalwidth=\linewidth]
+\column{0.48\linewidth}
+\metric{Cook máx.}{0,0028}{Sin dominancia}
+\column{0.48\linewidth}
+\metric{Leverage máx.}{0,0254}{Controlado}
+\end{columns}
+\vspace{0.14cm}
+\begin{block}{Lectura}
+No hay multicolinealidad severa; Box--Tidwell sugiere no linealidad en varias señales meteorológicas.
+\end{block}
+\column{0.54\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=2.05cm,keepaspectratio]{s3_fig7_vif.png}\\[-1pt]
+\includegraphics[width=\linewidth,height=2.45cm,keepaspectratio]{s3_fig6_residuos_influencia.png}
+\figcaption{VIF, residuos e influencia.}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Impacto de la imputación}
+\framesubtitle{La eliminación parece atractiva, pero cambia la población evaluada}
+\begin{columns}[T,onlytextwidth]
+\column{0.43\textwidth}
+\begin{table}
+\scriptsize
+\begin{tabular}{lrrrr}
+\toprule
+Estrategia & $n$ prueba & Recall & AUC & PR-AUC\\
+\midrule
+Eliminación & 15.195 & 0,742 & 0,871 & 0,681\\
+Simple & 49.117 & 0,714 & 0,850 & 0,653\\
+Regresión & 49.117 & 0,743 & 0,852 & 0,655\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{block}{Lectura crítica}
+La eliminación alcanza mayor AUC, pero reduce la prueba y selecciona estaciones o períodos completos.
+\end{block}
+\column{0.54\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=2.2cm,keepaspectratio]{s3_fig8_impacto_imputacion.png}\\[-1pt]
+\includegraphics[width=\linewidth,height=2.2cm,keepaspectratio]{s3_fig9_coeficientes_imputacion.png}
+\figcaption{Impacto de imputación en métricas y coeficientes.}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Conclusiones y recomendaciones}
+\framesubtitle{S1 descubrió. S2 validó. S3 integró y evaluó.}
+\begin{block}{Conclusión principal}
+Modelo temporalmente evaluado con AUC 0,852, PR-AUC 0,655 y recall 0,743. Los coeficientes son estables y no hay VIF problemático.
+\end{block}
+\begin{columns}[T,onlytextwidth]
+\column{0.48\textwidth}
+\begin{block}{Uso recomendado}
+Apoyar decisiones operativas, no sustituir sistemas meteorológicos especializados. El umbral debe calibrarse según costos reales.
+\end{block}
+\column{0.48\textwidth}
+\begin{block}{Mejoras futuras}
+\begin{itemize}
+\item Calibrar umbral según costos operativos.
+\item Validar también por Location.
+\item Usar splines para no linealidad.
+\item Evaluar imputación múltiple.
+\item Monitorear calibración y estabilidad.
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}[plain]
+\begin{center}
+\includegraphics[width=0.14\linewidth]{logo_unab.png}\\[0.6cm]
+{\Huge\bfseries Gracias}\\[0.35cm]
+{\large Predicción de lluvia del día siguiente en Australia}\\[0.2cm]
+{\small MCDI501 · Sumativa 3 · Grupo 2}
+\end{center}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,2 @@
+variable_eliminada,VIF_previo,variables_antes
+Pressure3pm,19.006044782871196,Humidity3pm | RainToday_bin | Humidity9am | Pressure9am | Pressure3pm | Rainfall_log1p | WindGustSpeed | Sunshine | Evaporation | Cloud3pm | Cloud9am | Temp3pm | WindSpeed3pm | Month_sin | Month_cos
