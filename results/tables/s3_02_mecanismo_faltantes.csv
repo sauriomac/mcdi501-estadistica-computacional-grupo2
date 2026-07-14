@@ -1,0 +1,8 @@
+variable,p_chi2_location,cramer_v_location,tasa_min_location,tasa_max_location,lectura
+Sunshine,0.0,0.858850654183437,0.00031318509238960227,1.0,MAR plausible: la ausencia depende fuertemente de Location; MNAR no puede descartarse
+Evaporation,0.0,0.8583051893388476,0.00031318509238960227,1.0,MAR plausible: la ausencia depende fuertemente de Location; MNAR no puede descartarse
+Cloud3pm,0.0,0.7761623273874253,0.0,1.0,MAR plausible: la ausencia depende fuertemente de Location; MNAR no puede descartarse
+Cloud9am,0.0,0.8137272388137253,0.0,1.0,MAR plausible: la ausencia depende fuertemente de Location; MNAR no puede descartarse
+Pressure9am,0.0,0.9080406932157817,0.0,1.0,MAR plausible: la ausencia depende fuertemente de Location; MNAR no puede descartarse
+Pressure3pm,0.0,0.9093512808199514,0.0,1.0,MAR plausible: la ausencia depende fuertemente de Location; MNAR no puede descartarse
+WindGustSpeed,0.0,0.7823597107774413,0.0015659254619480112,1.0,MAR plausible: la ausencia depende fuertemente de Location; MNAR no puede descartarse

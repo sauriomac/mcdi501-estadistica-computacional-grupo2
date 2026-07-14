@@ -1,0 +1,10 @@
+fase,hallazgo,resultado_previo,decision_s3
+S1,Sunshine,"48,01 % de faltantes",Imputar; no eliminar casos completos
+S1,Evaporation,"43,17 % de faltantes",Imputar; no eliminar casos completos
+S1,MaxTemp–Temp3pm,"r ≈ 0,985",No utilizarlas juntas sin selección o VIF
+S1/S2,Humidity3pm,"r objetivo = 0,446; IC bootstrap [0,442; 0,451]",Priorizar como predictor
+S1/S2,RainToday_bin,"r objetivo = 0,313; IC bootstrap [0,307; 0,319]",Priorizar como predictor
+S1/S2,Pressure9am,"r objetivo = -0,246; IC bootstrap [-0,252; -0,241]",Priorizar como predictor
+S1/S2,Rainfall,"r objetivo = 0,239; IC bootstrap [0,232; 0,246]",Aplicar log1p por cero-inflación
+S2,RainTomorrow,"Clase positiva ≈ 22,4 %",Ponderar clases y reportar recall/F1/PR-AUC
+S2,Location/Date,Dependencia por estación y tiempo,Prueba temporal; validación por Location como extensión

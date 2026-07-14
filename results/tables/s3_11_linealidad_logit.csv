@@ -1,0 +1,7 @@
+variable,p_value_término_xlogx,lectura
+Humidity3pm,0.0002775835425231025,posible no linealidad
+WindGustSpeed,0.9580875490159813,sin evidencia fuerte
+Sunshine,0.06084045729248559,sin evidencia fuerte
+WindSpeed3pm,0.1579961402758927,sin evidencia fuerte
+Pressure9am,0.004538125813687815,posible no linealidad
+Rainfall_log1p,0.023071969153880864,posible no linealidad

@@ -1,0 +1,9 @@
+estadistico,valor
+n_muestra,25000.0
+pct_pearson_abs_gt3,2.044
+cook_max,0.0027592173257477526
+cook_p99,0.00041321552093040106
+pct_cook_gt_4_n,7.792000000000001
+leverage_max,0.025425963222292142
+deviance_media,-0.11234121923569032
+deviance_sd,0.838796383335065

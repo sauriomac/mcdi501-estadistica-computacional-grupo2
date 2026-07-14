@@ -1,0 +1,15 @@
+paso,variable_ingresa,variables_modelo,asociacion_abs_objetivo,AIC,BIC
+1,Humidity3pm,Humidity3pm,0.4552909144044752,25257.58496112384,25274.202866445128
+2,Sunshine,Humidity3pm | Sunshine,0.4089276991953907,24581.313887527223,24606.240745509156
+3,Cloud3pm,Humidity3pm | Sunshine | Cloud3pm,0.36983262741871603,24366.66258893849,24399.898399581067
+4,Rainfall_log1p,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p,0.35295434433456263,23723.367313043374,23764.912076346594
+5,RainToday_bin,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin,0.3157882024057039,23724.696576638322,23774.550292602187
+6,Cloud9am,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am,0.31255641976377735,23723.17725755729,23781.3399261818
+7,Humidity9am,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am,0.27077276705382747,23652.51391163167,23718.985532916824
+8,Pressure9am,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am | Pressure9am,0.2370457432831853,22701.35935336164,22776.13992730744
+9,WindGustSpeed,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am | Pressure9am | WindGustSpeed,0.21394367620962126,22166.916391837472,22250.005918443916
+10,Temp3pm,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am | Pressure9am | WindGustSpeed | Temp3pm,0.19525826217583922,22024.843491780346,22116.241971047435
+11,Evaporation,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am | Pressure9am | WindGustSpeed | Temp3pm | Evaporation,0.1413868462698845,21997.327924357975,22097.035356285705
+12,WindSpeed3pm,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am | Pressure9am | WindGustSpeed | Temp3pm | Evaporation | WindSpeed3pm,0.08717045904467523,21887.63490737736,21995.651291965736
+13,Month_cos,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am | Pressure9am | WindGustSpeed | Temp3pm | Evaporation | WindSpeed3pm | Month_cos,0.04662309820593993,21828.622753777658,21944.94809102668
+14,Month_sin,Humidity3pm | Sunshine | Cloud3pm | Rainfall_log1p | RainToday_bin | Cloud9am | Humidity9am | Pressure9am | WindGustSpeed | Temp3pm | Evaporation | WindSpeed3pm | Month_cos | Month_sin,0.017409830722437594,21746.922565009692,21871.556854919356
