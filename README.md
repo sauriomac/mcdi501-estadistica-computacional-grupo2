@@ -67,6 +67,17 @@ Además, esta evaluación incorpora explícitamente el feedback recibido en S1:
 
 La Formativa 2 integra los resultados de S1 y S2 en una primera línea base de clasificación para predecir `RainTomorrow`. Incluye preparación de datos, imputación sin fuga de información, transformación `log1p` de `Rainfall`, regresión logística, odds ratios, diagnóstico VIF, matriz de confusión, métricas de clasificación y curva ROC-AUC.
 
+### Evaluación Sumativa 3: cierre y comunicación del proyecto
+
+* Modelamiento final reproducible: [`notebooks/s3_modelamiento_final.ipynb`](notebooks/s3_modelamiento_final.ipynb).
+* Informe fuente: [`sumativa-3-cierre y comunicacion del proyecto/S3_Informe_Final.tex`](<sumativa-3-cierre y comunicacion del proyecto/S3_Informe_Final.tex>).
+* Informe compilado: [`sumativa-3-cierre y comunicacion del proyecto/S3_Informe_Final.pdf`](<sumativa-3-cierre y comunicacion del proyecto/S3_Informe_Final.pdf>).
+* Presentación LaTeX/Beamer: [`sumativa-3-cierre y comunicacion del proyecto/S3_Presentacion_WeatherAUS_COMPLETA.tex`](<sumativa-3-cierre y comunicacion del proyecto/S3_Presentacion_WeatherAUS_COMPLETA.tex>).
+* Presentación compilada: [`sumativa-3-cierre y comunicacion del proyecto/S3_Presentacion_WeatherAUS_COMPLETA.pdf`](<sumativa-3-cierre y comunicacion del proyecto/S3_Presentacion_WeatherAUS_COMPLETA.pdf>).
+* Tablas y resumen del modelamiento final: `results/tables/s3_*.csv` y `results/s3_summary.json`.
+
+La Sumativa 3 integra el ciclo completo S1-S2-F2 en un informe final y una presentación Beamer. Incluye selección de variables, diagnóstico de imputación, evaluación temporal, curvas ROC, validación bootstrap, diagnóstico de influencia y síntesis comunicacional del modelo final.
+
 ## Estructura
 
 * `data/raw/`: datasets originales.
@@ -75,6 +86,7 @@ La Formativa 2 integra los resultados de S1 y S2 en una primera línea base de c
 * `src/`: funciones reutilizables.
 * `results/figures/`: figuras generadas por los notebooks.
 * `results/figures_f2/`: figuras generadas por el notebook de Formativa 2.
+* `results/tables/`: tablas generadas para el informe final.
 * `results/reports/`: reportes generados.
 * `docs/`: documentación adicional.
 * `formativa-*` y `sumativa-*`: fuentes y entregables de cada evaluación.
@@ -122,12 +134,14 @@ Abrir el notebook correspondiente y seleccionar **Kernel → Restart Kernel and 
 * Sumativa 1: `notebooks/S1_Definicion.ipynb`.
 * Sumativa 2: `notebooks/S2_Validacion.ipynb`.
 * Formativa 2: `notebooks/F2_Modelamiento_Predictivo.ipynb`.
+* Sumativa 3: `notebooks/s3_modelamiento_final.ipynb`.
 
 Al finalizar se generan:
 
 * Los datos procesados en `data/processed/weatherAUS.csv`.
 * Las figuras utilizadas por LaTeX en `results/figures/`.
 * Las figuras de Formativa 2 en `results/figures_f2/`.
+* Las tablas de Sumativa 3 en `results/tables/` y el resumen `results/s3_summary.json`.
 * Los reportes y tablas auxiliares en `results/reports/`.
 
 ### 3. Compilar los informes LaTeX
@@ -170,6 +184,22 @@ Formativa 2:
 cd formativa-2-modelamiento-predictivo
 pdflatex F2_Modelamiento_Predictivo_WeatherAUS.tex
 pdflatex F2_Modelamiento_Predictivo_WeatherAUS.tex
+```
+
+Sumativa 3 - informe:
+
+```bash
+cd "sumativa-3-cierre y comunicacion del proyecto"
+pdflatex S3_Informe_Final.tex
+pdflatex S3_Informe_Final.tex
+```
+
+Sumativa 3 - presentación Beamer:
+
+```bash
+cd "sumativa-3-cierre y comunicacion del proyecto"
+pdflatex S3_Presentacion_WeatherAUS_COMPLETA.tex
+pdflatex S3_Presentacion_WeatherAUS_COMPLETA.tex
 ```
 
 La primera compilación genera los archivos auxiliares; la segunda actualiza el índice y las referencias internas. LaTeX incorpora las figuras existentes en `results/figures/`, `results/figures_s2/` o `results/figures_f2/`, pero no las genera.
@@ -230,12 +260,29 @@ xdg-open F2_Modelamiento_Predictivo_WeatherAUS.pdf
 Start-Process F2_Modelamiento_Predictivo_WeatherAUS.pdf
 ```
 
+Sumativa 3 - informe y presentación:
+
+```bash
+# macOS
+open S3_Informe_Final.pdf
+open S3_Presentacion_WeatherAUS_COMPLETA.pdf
+
+# Linux
+xdg-open S3_Informe_Final.pdf
+xdg-open S3_Presentacion_WeatherAUS_COMPLETA.pdf
+
+# Windows (PowerShell)
+Start-Process S3_Informe_Final.pdf
+Start-Process S3_Presentacion_WeatherAUS_COMPLETA.pdf
+```
+
 ## Notas de reproducibilidad
 
 * Ejecutar siempre los notebooks desde la raíz del repositorio.
 * Verificar que exista el archivo `data/raw/weatherAUS.csv`.
 * Ejecutar `Kernel → Restart Kernel and Run All Cells` antes de compilar los informes.
 * No editar manualmente las figuras generadas por los notebooks.
-* Mantener las salidas de `results/figures/`, `results/figures_s2/`, `results/figures_f2/` y `results/reports/` sincronizadas con la versión final del notebook.
+* Mantener las salidas de `results/figures/`, `results/figures_s2/`, `results/figures_f2/`, `results/tables/` y `results/reports/` sincronizadas con la versión final del notebook.
 * La Sumativa 2 depende explícitamente de los resultados de la Sumativa 1, por lo que debe ejecutarse después de S1.
 * La Formativa 2 depende de los hallazgos de S1 y S2, por lo que conviene ejecutarla después de ambas evaluaciones.
+* La Sumativa 3 depende de S1, S2 y F2, por lo que conviene ejecutarla al final del flujo.
